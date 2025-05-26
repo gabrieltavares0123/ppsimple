@@ -392,7 +392,7 @@ class DoTransferServiceTest {
             assertEquals(actual = this.message, expected = "Payer not found.")
             assertEquals(
                 actual = this.details["reason"],
-                expected = "Payee with id $payerExternalId doesn't exists."
+                expected = "Payer with id $payerExternalId doesn't exists."
             )
         }
     }

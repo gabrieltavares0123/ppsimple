@@ -2,7 +2,6 @@ package com.magrathea.ppsimple.infra.adapters.inbound.rest
 
 import com.github.tomakehurst.wiremock.client.WireMock.created
 import com.github.tomakehurst.wiremock.client.WireMock.get
-import com.github.tomakehurst.wiremock.client.WireMock.post
 import com.github.tomakehurst.wiremock.client.WireMock.stubFor
 import io.restassured.RestAssured
 import io.restassured.http.ContentType
