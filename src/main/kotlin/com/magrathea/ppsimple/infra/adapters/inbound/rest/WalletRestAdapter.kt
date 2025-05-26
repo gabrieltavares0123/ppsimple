@@ -4,6 +4,7 @@ import com.magrathea.ppsimple.application.ports.inbound.CreateWalletUseCase
 import com.magrathea.ppsimple.application.services.CreateWalletService
 import com.magrathea.ppsimple.domain.Document
 import com.magrathea.ppsimple.infra.adapters.inbound.rest.data.requests.CreateWalletRequest
+import com.magrathea.ppsimple.infra.adapters.inbound.rest.data.responses.CreateWalletResponse
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
@@ -11,7 +12,6 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
-import java.util.UUID
 
 @RestController
 @RequestMapping("/api")
@@ -24,11 +24,17 @@ class WalletRestAdapter(
         consumes = [MediaType.APPLICATION_JSON_VALUE],
         produces = [MediaType.APPLICATION_JSON_VALUE]
     )
-    fun createWallet(@RequestBody createWalletRequest: CreateWalletRequest): ResponseEntity<UUID> {
+    fun createWallet(
+        @RequestBody createWalletRequest: CreateWalletRequest
+    ): ResponseEntity<CreateWalletResponse> {
 
-        val result = createWallet.execute(createWalletRequest.toCreateWalletUseCaseInput())
+        val externalId = createWallet.execute(createWalletRequest.toCreateWalletUseCaseInput())
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(result)
+        return ResponseEntity.status(HttpStatus.CREATED).body(
+            CreateWalletResponse(
+                externalId = externalId
+            )
+        )
     }
 
     private fun CreateWalletRequest.toCreateWalletUseCaseInput() = CreateWalletUseCase.Input(

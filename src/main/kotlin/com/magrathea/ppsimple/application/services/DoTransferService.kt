@@ -149,8 +149,7 @@ class DoTransferService(
     private fun verifyPayerWalletBalance(payerWallet: Wallet, transferValue: BigDecimal) {
         logger.info("Started checking payer balance.")
         if (
-            payerWallet.balance.compareTo(BigDecimal(0)) == 0 ||
-            payerWallet.balance.compareTo(transferValue) < 0
+            payerWallet.balance.compareTo(BigDecimal(0)) == 0 || (payerWallet.balance.compareTo(transferValue) < 0)
         ) {
             throw InsufficientBalanceDomainException(
                 message = "Insufficient balance."

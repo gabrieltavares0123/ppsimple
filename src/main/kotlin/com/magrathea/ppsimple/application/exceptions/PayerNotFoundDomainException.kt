@@ -7,5 +7,5 @@ class PayerNotFoundDomainException(
     payerExternalId: UUID
 ) : DomainException(
     message = message,
-    details = mapOf("reason" to "Payee with id $payerExternalId doesn't exists.")
+    details = mapOf("reason" to "Payer with id $payerExternalId doesn't exists.")
 )

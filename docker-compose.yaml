@@ -68,8 +68,8 @@ services:
     container_name: pp-simple-app-container
     image: pp-simple-app:1.0
     build:
-      context: ..
-      dockerfile: ./docker/DockerFile
+      context: .
+      dockerfile: ./DockerFile
     depends_on:
       postgres:
         condition: service_healthy
@@ -99,7 +99,7 @@ services:
       SPRING_FLYWAY_BASELINE-VERSION: 0
       SPRING_KAFKA_CONSUMER_PROPERTIES_SPRING_JSON_TRUSTED_PACKAGES: '*'
     volumes:
-      - ./logs:/app/logs
+      - logs:/app/log
     healthcheck:
       test: [ "CMD", "curl", "-f", "http://localhost:8080/actuator/health" ]
       interval: 30s
@@ -116,3 +116,4 @@ networks:
 volumes:
   postgres_data:
   kafka_data:
+  logs:

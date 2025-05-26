@@ -2,6 +2,7 @@ package com.magrathea.ppsimple.infra.adapters.outbound.gateways
 
 import com.magrathea.ppsimple.application.ports.outbound.VerifyAuthorizationGateway
 import com.magrathea.ppsimple.infra.adapters.outbound.gateways.clients.AuthorizationClient
+import com.magrathea.ppsimple.infra.adapters.outbound.gateways.clients.exceptions.FeignClientGatewayException
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Component
 
@@ -14,15 +15,16 @@ class VerifyAuthorizationGatewayAdapter(
 
     override fun isAuthorized(): Boolean {
 
-        logger.info("Start request transfer authorization.")
+        return try {
+            logger.info("Start request transfer authorization.")
+            val result = authorizationClient.authorize()
+            logger.info("Finish request to verify transfer authorization with success code ${result.statusCode} and body ${result.body}.")
+            true
+        } catch (fcge: FeignClientGatewayException) {
+            logger.info("Finish request to verify transfer authorization with error code ${fcge.response.status()} and body ${fcge.response.body()}")
+            false
+        }
 
-        val result = authorizationClient.authorize()
-
-        logger.info("Finish request to transfer authorization with body ${result.body}.")
-
-        val isAuthorized = result.body?.data?.authorization ?: false
-
-        return isAuthorized
     }
 
 }

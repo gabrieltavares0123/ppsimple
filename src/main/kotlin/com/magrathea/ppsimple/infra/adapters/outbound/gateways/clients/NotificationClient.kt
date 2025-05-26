@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.ResponseBody
 @FeignClient(
     name = "send-transfer-notification",
     url = "\${gateway.send-transfer-notification-gateway-url}",
-    fallback = NotificationClientFallBack::class
 )
 interface NotificationClient {
 
