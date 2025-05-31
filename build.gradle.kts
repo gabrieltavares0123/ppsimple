@@ -66,6 +66,8 @@ dependencies {
     implementation("org.springframework.cloud:spring-cloud-starter-openfeign:4.2.1")
     implementation("org.springframework.cloud:spring-cloud-starter-circuitbreaker-resilience4j:3.2.1")
 
+    implementation("commons-codec:commons-codec:1.18.0")
+
     implementation("org.apache.logging.log4j:log4j-api:2.24.3")
     implementation("org.apache.logging.log4j:log4j-core:2.24.3")
     implementation("org.apache.logging.log4j:log4j-slf4j2-impl:2.24.3")
@@ -73,21 +75,28 @@ dependencies {
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
     testImplementation("io.mockk:mockk:1.13.17")
-    testImplementation("org.springframework.kafka:spring-kafka-test")
-    testImplementation("io.github.cdimascio:dotenv-kotlin:6.5.1")
 
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
     testRuntimeOnly("com.h2database:h2")
 
+    integrationTestImplementation("org.springframework.boot:spring-boot-starter-test")
+    integrationTestImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
+    integrationTestImplementation("org.springframework.boot:spring-boot-testcontainers")
+    integrationTestImplementation("org.testcontainers:junit-jupiter")
+    integrationTestImplementation("org.testcontainers:postgresql")
+    integrationTestImplementation("org.testcontainers:kafka")
+    integrationTestImplementation("org.springframework.kafka:spring-kafka-test")
+    integrationTestImplementation("org.wiremock.integrations:wiremock-spring-boot:3.10.0")
+
     end2endTestImplementation("org.springframework.boot:spring-boot-starter-test")
     end2endTestImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
+    end2endTestImplementation("org.springframework.boot:spring-boot-testcontainers")
     end2endTestImplementation("org.testcontainers:junit-jupiter")
     end2endTestImplementation("org.testcontainers:postgresql")
-    end2endTestImplementation("org.testcontainers:kafka:1.19.3")
+    end2endTestImplementation("org.testcontainers:kafka")
     end2endTestImplementation("io.rest-assured:rest-assured:5.4.0")
     end2endTestImplementation("io.rest-assured:kotlin-extensions:5.4.0")
-    end2endTestImplementation("io.github.cdimascio:dotenv-kotlin:6.5.1")
-    end2endTestImplementation("org.wiremock.integrations:wiremock-spring-boot:3.6.0")
+    end2endTestImplementation("org.wiremock.integrations:wiremock-spring-boot:3.10.0")
 }
 
 configurations.all {
@@ -138,6 +147,8 @@ tasks.getByName<Test>("test") {
 tasks.getByName<Test>("integrationTest") {
     useJUnitPlatform()
 
+    systemProperty("spring.profiles.active", "int")
+
     testLogging {
         events("passed")
     }
@@ -158,7 +169,7 @@ tasks.named<ProcessResources>("processEnd2endTestResources") {
 }
 
 tasks.named<ProcessResources>("processIntegrationTestResources") {
-    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    duplicatesStrategy = DuplicatesStrategy.INCLUDE
 }
 
 tasks.check {

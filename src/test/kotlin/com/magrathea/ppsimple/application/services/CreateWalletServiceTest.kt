@@ -36,7 +36,6 @@ class CreateWalletServiceTest {
         val balance = BigDecimal(2000)
 
         val input = CreateWalletUseCase.Input(
-            id = 1,
             // Overrides in service when it calls externalIdUtils.random().
             externalId = null,
             ownerName = "payer",
@@ -47,7 +46,7 @@ class CreateWalletServiceTest {
         )
 
         val wallet = Wallet(
-            id = 1,
+            id = null,
             // Overrides in service when it calls externalIdUtils.random().
             externalId = externalId,
             ownerName = "payer",
@@ -80,7 +79,6 @@ class CreateWalletServiceTest {
         val balance = BigDecimal(2000)
 
         val input = CreateWalletUseCase.Input(
-            id = 1,
             // Overrides in service when it calls externalIdUtils.random().
             externalId = null,
             ownerName = "payer",

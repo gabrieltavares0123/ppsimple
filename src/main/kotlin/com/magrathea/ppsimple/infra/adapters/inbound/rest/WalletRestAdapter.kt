@@ -38,7 +38,6 @@ class WalletRestAdapter(
     }
 
     private fun CreateWalletRequest.toCreateWalletUseCaseInput() = CreateWalletUseCase.Input(
-        id = null,
         externalId = null,
         ownerName = this.ownerName,
         document = Document.create(this.document),

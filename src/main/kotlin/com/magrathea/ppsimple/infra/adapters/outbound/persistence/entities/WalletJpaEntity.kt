@@ -5,20 +5,15 @@ import jakarta.persistence.Entity
 import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
-import jakarta.persistence.SequenceGenerator
 import jakarta.persistence.Table
+import java.math.BigDecimal
 
 @Entity(name = "Wallet")
 @Table(name = "wallet")
 data class WalletJpaEntity(
 
     @Id
-    @SequenceGenerator(
-        name = PRIMARY_KEY_GENERATOR_NAME,
-        sequenceName = DATABASE_SEQUENCE_NAME,
-        allocationSize = 1
-    )
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = PRIMARY_KEY_GENERATOR_NAME)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Int?,
 
     @Column(unique = true)
@@ -27,7 +22,7 @@ data class WalletJpaEntity(
     @Column(unique = true)
     val document: String,
 
-    val balance: String,
+    val balance: BigDecimal,
     val ownerName: String,
 
     @Column(unique = true)
@@ -35,13 +30,7 @@ data class WalletJpaEntity(
 
     val password: String
 ) {
-
-    private companion object {
-        const val PRIMARY_KEY_GENERATOR_NAME = "wallet_id_sequence"
-        const val DATABASE_SEQUENCE_NAME = "wallet_id_sequence"
-    }
-
     override fun toString(): String {
-        return "id=$id, email=$email"
+        return "id=$id, externalId=$externalId, document=$document, balance=$balance, email=$email"
     }
 }

@@ -10,7 +10,7 @@ import java.util.UUID
 
 @Component
 class TransferPersistenceAdapter(
-    private val transferJpaRepository: TransferJpaRepository
+    private val transferJpaRepository: TransferJpaRepository,
 ) : TransferPersistence {
 
     override fun save(transfer: Transfer): Transfer {
@@ -22,7 +22,7 @@ class TransferPersistenceAdapter(
 
     private fun Transfer.toTransferJpaEntity() = TransferJpaEntity(
         id = this.id,
-        externalId = UUID.randomUUID().toString(),
+        externalId = this.externalId.toString(),
         payerExternalId = this.payerExternalId.toString(),
         payeeExternalId = this.payeeExternalId.toString(),
         value = this.value.toString(),

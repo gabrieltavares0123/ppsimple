@@ -1,10 +1,10 @@
 package com.magrathea.ppsimple.infra.adapters.outbound.gateways.clients.dtos
 
-data class TransferAuthorizationDto(
+data class AuthorizationDto(
     val status: String,
     val data: Data
-)
-
-data class Data(
-    val authorization: Boolean
-)
+) {
+    data class Data(
+        val authorization: Boolean
+    )
+}

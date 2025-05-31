@@ -41,10 +41,10 @@ class WalletTest {
         }
 
         assertInstanceOf<IllegalArgumentDomainException>(exception)
-        assertEquals(actual = exception.message, expected = "Invalid wallet.")
+        assertEquals(actual = exception.message, expected = "Invalid owner name.")
         with(exception) {
             assertEquals(actual = this.details["field"], expected = "ownerName")
-            assertEquals(actual = this.details["invalid_value"], expected = "")
+            assertEquals(actual = this.details["invalid_value"], expected = "empty")
             assertEquals(actual = this.details["expected_format"], expected = "Field should not be empty.")
         }
     }
@@ -64,7 +64,7 @@ class WalletTest {
         }
 
         assertInstanceOf<IllegalArgumentDomainException>(exception)
-        assertEquals(actual = exception.message, expected = "Invalid wallet.")
+        assertEquals(actual = exception.message, expected = "Invalid owner name.")
         with(exception) {
             assertEquals(actual = this.details["field"], expected = "ownerName")
             assertEquals(actual = this.details["invalid_value"], expected = "Ga")
@@ -90,7 +90,7 @@ class WalletTest {
         }
 
         assertInstanceOf<IllegalArgumentDomainException>(exception)
-        assertEquals(actual = exception.message, expected = "Invalid wallet.")
+        assertEquals(actual = exception.message, expected = "Invalid balance.")
         with(exception) {
             assertEquals(actual = this.details["field"], expected = "balance")
             assertEquals(actual = this.details["invalid_value"], expected = BigDecimal(-1.00))
@@ -113,10 +113,10 @@ class WalletTest {
         }
 
         assertInstanceOf<IllegalArgumentDomainException>(exception)
-        assertEquals(actual = exception.message, expected = "Invalid wallet.")
+        assertEquals(actual = exception.message, expected = "Invalid e-mail.")
         with(exception) {
             assertEquals(actual = this.details["field"], expected = "email")
-            assertEquals(actual = this.details["invalid_value"], expected = "")
+            assertEquals(actual = this.details["invalid_value"], expected = "empty")
             assertEquals(actual = this.details["expected_format"], expected = "Field should not be empty.")
         }
     }
@@ -136,7 +136,7 @@ class WalletTest {
         }
 
         assertInstanceOf<IllegalArgumentDomainException>(exception)
-        assertEquals(actual = exception.message, expected = "Invalid wallet.")
+        assertEquals(actual = exception.message, expected = "Invalid e-mail.")
         with(exception) {
             assertEquals(actual = this.details["field"], expected = "email")
             assertEquals(actual = this.details["invalid_value"], expected = "gabriel.mail.com")
@@ -162,10 +162,10 @@ class WalletTest {
         }
 
         assertInstanceOf<IllegalArgumentDomainException>(exception)
-        assertEquals(actual = exception.message, expected = "Invalid wallet.")
+        assertEquals(actual = exception.message, expected = "Invalid password.")
         with(exception) {
             assertEquals(actual = this.details["field"], expected = "password")
-            assertEquals(actual = this.details["invalid_value"], expected = "")
+            assertEquals(actual = this.details["invalid_value"], expected = "empty")
             assertEquals(actual = this.details["expected_format"], expected = "Field should not be empty.")
         }
     }
@@ -185,7 +185,7 @@ class WalletTest {
         }
 
         assertInstanceOf<IllegalArgumentDomainException>(exception)
-        assertEquals(actual = exception.message, expected = "Invalid wallet.")
+        assertEquals(actual = exception.message, expected = "Invalid password.")
         with(exception) {
             assertEquals(actual = this.details["field"], expected = "password")
             assertEquals(actual = this.details["invalid_value"], expected = "1234")

@@ -31,7 +31,7 @@ class CreateWalletService(
     }
 
     private fun CreateWalletUseCase.Input.toWallet(externalId: UUID) = Wallet(
-        id = this.id,
+        id = null,
         externalId = externalId,
         ownerName = this.ownerName,
         document = this.document,

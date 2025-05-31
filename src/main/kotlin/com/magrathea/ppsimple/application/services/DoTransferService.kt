@@ -55,14 +55,14 @@ class DoTransferService(
             val payerNewBalance = payerWallet.balance - input.value
             walletPersistence.updateBalance(
                 externalId = payerWallet.externalId,
-                balance = payerNewBalance
+                newBalance = payerNewBalance
             )
 
             logger.info("Updating payee balance.")
             val payeeNewBalance: BigDecimal = payeeWallet.balance + input.value
             walletPersistence.updateBalance(
                 externalId = payeeWallet.externalId,
-                balance = payeeNewBalance
+                newBalance = payeeNewBalance
             )
 
             logger.info("Persisting transaction in database.")
@@ -92,7 +92,7 @@ class DoTransferService(
         logger.info("Started verifying if transfer is authorized.")
 
         val authorization = verifyAuthorizationGateway.isAuthorized()
-        if (authorization == null || authorization.not()) {
+        if (authorization.not()) {
             throw UnauthorizedTransferDomainException(
                 message = "This transfer is unauthorized."
             ).also {

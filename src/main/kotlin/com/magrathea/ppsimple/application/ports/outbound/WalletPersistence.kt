@@ -6,12 +6,10 @@ import java.util.UUID
 
 interface WalletPersistence {
 
-    fun findBy(email: String): Wallet?
-
     fun findBy(externalId: UUID): Wallet?
 
     fun save(wallet: Wallet): Wallet
 
-    fun updateBalance(externalId: UUID, balance: BigDecimal)
+    fun updateBalance(externalId: UUID, newBalance: BigDecimal)
 
 }

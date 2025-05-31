@@ -135,14 +135,14 @@ class DoTransferServiceTest {
         justRun {
             walletPersistence.updateBalance(
                 externalId = payerWallet.externalId,
-                balance = payerNewBalance
+                newBalance = payerNewBalance
             )
         }
         val payeeNewBalance = payeeWallet.balance + input.value
         justRun {
             walletPersistence.updateBalance(
                 externalId = payeeWallet.externalId,
-                balance = payeeNewBalance
+                newBalance = payeeNewBalance
             )
         }
         every { transferPersistence.save(transfer = transfer) } returns transfer
@@ -158,11 +158,11 @@ class DoTransferServiceTest {
             transactionPersistence.open<Transfer>(any())
             walletPersistence.updateBalance(
                 externalId = payerWallet.externalId,
-                balance = payerNewBalance
+                newBalance = payerNewBalance
             )
             walletPersistence.updateBalance(
                 externalId = payeeWallet.externalId,
-                balance = payeeNewBalance
+                newBalance = payeeNewBalance
             )
             transferPersistence.save(transfer)
             sendNotificationGateway.send(notification)
@@ -304,14 +304,14 @@ class DoTransferServiceTest {
         justRun {
             walletPersistence.updateBalance(
                 externalId = payerWallet.externalId,
-                balance = payerNewBalance
+                newBalance = payerNewBalance
             )
         }
         val payeeNewBalance = payeeWallet.balance + input.value
         justRun {
             walletPersistence.updateBalance(
                 externalId = payeeWallet.externalId,
-                balance = payeeNewBalance
+                newBalance = payeeNewBalance
             )
         }
         every { transferPersistence.save(transfer = transfer) } returns transfer
@@ -328,11 +328,11 @@ class DoTransferServiceTest {
             transactionPersistence.open<Transfer>(any())
             walletPersistence.updateBalance(
                 externalId = payerWallet.externalId,
-                balance = payerNewBalance
+                newBalance = payerNewBalance
             )
             walletPersistence.updateBalance(
                 externalId = payeeWallet.externalId,
-                balance = payeeNewBalance
+                newBalance = payeeNewBalance
             )
             transferPersistence.save(transfer)
             sendNotificationGateway.send(notification)

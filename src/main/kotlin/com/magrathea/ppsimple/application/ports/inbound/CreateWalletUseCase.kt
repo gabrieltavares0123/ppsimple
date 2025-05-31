@@ -9,7 +9,6 @@ interface CreateWalletUseCase {
     fun execute(input: Input): UUID
 
     data class Input(
-        val id: Int?,
         val externalId: UUID?,
         val ownerName: String,
         val document: Document,

@@ -5,7 +5,7 @@ import com.magrathea.ppsimple.domain.Document
 import com.magrathea.ppsimple.domain.Wallet
 import com.magrathea.ppsimple.infra.adapters.outbound.persistence.entities.WalletJpaEntity
 import com.magrathea.ppsimple.infra.adapters.outbound.persistence.respoitories.WalletJpaRepository
-import org.springframework.data.jpa.repository.Modifying
+import jakarta.transaction.Transactional
 import org.springframework.stereotype.Component
 import java.math.BigDecimal
 import java.util.UUID
@@ -14,9 +14,6 @@ import java.util.UUID
 class WalletPersistenceAdapter(
     private val walletJpaRepository: WalletJpaRepository,
 ) : WalletPersistence {
-
-    override fun findBy(email: String): Wallet? =
-        walletJpaRepository.findByEmail(email)?.toWallet()
 
     override fun findBy(externalId: UUID): Wallet? =
         walletJpaRepository.findByExternalId(externalId.toString())?.toWallet()
@@ -29,11 +26,11 @@ class WalletPersistenceAdapter(
         return createdWallet.toWallet()
     }
 
-    @Modifying
-    override fun updateBalance(externalId: UUID, balance: BigDecimal) {
+    @Transactional
+    override fun updateBalance(externalId: UUID, newBalance: BigDecimal) {
         walletJpaRepository.updateBalance(
             externalId = externalId.toString(),
-            balance = balance.toPlainString()
+            newBalance = newBalance.toPlainString()
         )
     }
 
@@ -42,7 +39,7 @@ class WalletPersistenceAdapter(
         externalId = UUID.fromString(this.externalId),
         ownerName = this.ownerName,
         document = Document.create(this.document),
-        balance = BigDecimal(this.balance),
+        balance = this.balance,
         email = this.email,
         password = this.password
     )
@@ -52,7 +49,7 @@ class WalletPersistenceAdapter(
         externalId = this.externalId.toString(),
         ownerName = this.ownerName,
         document = this.document.unformatted(),
-        balance = this.balance.toPlainString(),
+        balance = this.balance,
         email = this.email,
         password = this.password
     )

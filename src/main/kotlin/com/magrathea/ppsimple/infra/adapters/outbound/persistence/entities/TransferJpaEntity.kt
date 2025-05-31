@@ -8,7 +8,6 @@ import jakarta.persistence.Enumerated
 import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
-import jakarta.persistence.SequenceGenerator
 import jakarta.persistence.Table
 import org.springframework.data.annotation.CreatedDate
 import java.time.LocalDateTime
@@ -17,12 +16,8 @@ import java.time.LocalDateTime
 @Table(name = "transfer")
 data class TransferJpaEntity(
     @Id
-    @SequenceGenerator(
-        name = PRIMARY_KEY_GENERATOR_NAME,
-        sequenceName = DATABASE_SEQUENCE_NAME,
-        allocationSize = 1
-    )
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = PRIMARY_KEY_GENERATOR_NAME)
+
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Int?,
 
     val externalId: String,
@@ -41,8 +36,6 @@ data class TransferJpaEntity(
     @CreatedDate
     val createdAt: LocalDateTime
 ) {
-    private companion object {
-        const val PRIMARY_KEY_GENERATOR_NAME = "transfer_id_sequence"
-        const val DATABASE_SEQUENCE_NAME = "transfer_id_sequence"
-    }
+    override fun toString(): String =
+        "id=$id, externalId=$externalId, payerExternalId=$payerExternalId, payeeExternalId=$payeeExternalId, value=$value, type=$type, createdAt=$createdAt"
 }

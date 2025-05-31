@@ -7,12 +7,10 @@ import org.springframework.data.jpa.repository.Query
 
 interface WalletJpaRepository : JpaRepository<WalletJpaEntity, Int> {
 
-    fun findByEmail(email: String): WalletJpaEntity?
-
     fun findByExternalId(externalId: String): WalletJpaEntity?
 
-    @Modifying
-    @Query("UPDATE Wallet u set u.balance = :balance WHERE u.externalId = :externalId")
-    fun updateBalance(externalId: String, balance: String)
+    @Modifying(clearAutomatically = true)
+    @Query("UPDATE Wallet u SET u.balance = :newBalance WHERE u.externalId = :externalId")
+    fun updateBalance(externalId: String, newBalance: String)
 
 }
