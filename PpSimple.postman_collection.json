@@ -1,0 +1,86 @@
+{
+	"info": {
+		"_postman_id": "20cc2a96-c00e-41a0-8224-4505a61beff7",
+		"name": "PpSimple",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "3467027"
+	},
+	"item": [
+		{
+			"name": "Create wallet",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"ownerName\": \"Gabriel Jorge\",\r\n  \"document\": \"000.000.000-00\",\r\n  \"documentType\": \"CPF\",\r\n  \"balance\": 2500,\r\n  \"email\": \"gabriel.jorge@mail.com\",\r\n  \"password\": \"12345678\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8080/api/wallet",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"wallet"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Transfer",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI1YThhODFjZS1hY2I1LTQ0YTMtOGViNi1lNzc2Yzc0MWZhYjUiLCJpYXQiOjE3NDYyMjM1MzcsImV4cCI6MzQ5MjQ1MDY3NH0.Kx_ugzpPpp-halcREQC2qbYCemAOJ_4EjHtKIsCGQAlLZEm7gZQxeq8q188pFaR2ddtMFhP2tahWKWz2ua7uYA",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"value\": 0.01,\r\n  \"payer\": \"bb69e149-5cb4-482d-b68c-034e853783b5\",\r\n  \"payee\": \"ca438f08-f480-4df4-bdfb-d0a8524af127\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8080/api/transfer",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"transfer"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
