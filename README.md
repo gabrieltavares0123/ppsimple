@@ -20,7 +20,7 @@ Tomei a liberdade de usar alguns conceitos usados em aplicações reais na solu�
 - Decidi arquitetar a aplicação para ser executada containizada.
 
 ## Arquitetura
-Quando uma transferência é feita, primeiro verificamos se ela está autorizada através de um serviço externo ```Authentication Service```. Caso verdadeiro, a transferência é salva em um banco de dados ```PostgreSQL```. Em seguida uma notificação é enviada via serviço externo ```Notification Service```. Caso esse serviço esteja indisponível, a notificação é enviada como evento no ```Kafka``` para ser reenviada posteriormente.
+Quando uma transferência é feita, primeiro verificamos se ela está autorizada através de um serviço externo ```Authorization Service```. Caso verdadeiro, a transferência é salva em um banco de dados ```PostgreSQL```. Em seguida uma notificação é enviada via serviço externo ```Notification Service```. Caso esse serviço esteja indisponível, a notificação é enviada como evento no ```Kafka``` para ser reenviada posteriormente.
 
 Segue um desenho da arquitetura:
 ![alt text](docs/ppsimple-architecture.png)
