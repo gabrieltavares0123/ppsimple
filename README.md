@@ -1,7 +1,7 @@
 <h1 align="center"> 
   Desafio backend PicPay
 </h1>
-Esta é uma versão simlpificada do PicPay que contempla a funcionalidade de transferir valores entre carteiras. Nela, usuários comuns e lojistas podem realizar transferências.
+Esta é uma versão simlpificada do PicPay que contempla a funcionalidade de transferir valores entre carteiras. Nela, usuários comuns e lojistas podem realizar transferências. Tudo foi desenvolvido baseado nesse desafio https://github.com/PicPay/picpay-desafio-backend.
 
 ## Tecnologias envolvidas
 - ```Spring Boot``` como framework web;
