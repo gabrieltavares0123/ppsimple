@@ -46,7 +46,6 @@ curl --location 'http://127.0.0.1:8080/api/wallet' \
 ### Realizar uma transferência
 ```
 curl --location 'http://127.0.0.1:8080/api/transfer' \
---header 'Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI1YThhODFjZS1hY2I1LTQ0YTMtOGViNi1lNzc2Yzc0MWZhYjUiLCJpYXQiOjE3NDYyMjM1MzcsImV4cCI6MzQ5MjQ1MDY3NH0.Kx_ugzpPpp-halcREQC2qbYCemAOJ_4EjHtKIsCGQAlLZEm7gZQxeq8q188pFaR2ddtMFhP2tahWKWz2ua7uYA' \
 --header 'Content-Type: application/json' \
 --data '{
   "value": 0.01,
