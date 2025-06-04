@@ -36,7 +36,7 @@ data class Wallet(
             expectedFormat = "Field should not be negative."
         )
 
-        if (email.isEmpty()) throw IllegalArgumentDomainException(
+        if (email.isBlank()) throw IllegalArgumentDomainException(
             message = "Invalid e-mail.",
             field = "email",
             invalidValue = "empty",

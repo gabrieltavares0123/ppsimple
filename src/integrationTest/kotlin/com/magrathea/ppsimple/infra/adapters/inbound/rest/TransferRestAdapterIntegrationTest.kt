@@ -9,6 +9,8 @@ import com.github.tomakehurst.wiremock.client.WireMock.stubFor
 import com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo
 import com.magrathea.ppsimple.infra.BaseIntegrationTest
 import com.magrathea.ppsimple.infra.adapters.inbound.rest.data.requests.DoTransferRequest
+import org.hamcrest.CoreMatchers.`is`
+import org.hamcrest.CoreMatchers.notNullValue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -19,7 +21,6 @@ import org.springframework.test.annotation.DirtiesContext
 import org.springframework.test.context.jdbc.Sql
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.post
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import org.wiremock.spring.ConfigureWireMock
 import org.wiremock.spring.EnableWireMock
@@ -66,7 +67,7 @@ class TransferRestAdapterIntegrationTest @Autowired constructor(
             print()
         }.andExpect {
             status().isCreated
-            jsonPath("externalId").isNotEmpty
+            jsonPath("externalId", `is`(notNullValue()))
         }
     }
 
@@ -95,8 +96,8 @@ class TransferRestAdapterIntegrationTest @Autowired constructor(
             print()
         }.andExpect {
             status().isForbidden
-            jsonPath("message").value("This transfer is unauthorized.")
-            jsonPath("details.reason").value("This transaction is not authorized.")
+            jsonPath("message", `is`("This transfer is unauthorized."))
+            jsonPath("details.reason", `is`("This transaction is not authorized."))
         }
     }
 
@@ -118,8 +119,8 @@ class TransferRestAdapterIntegrationTest @Autowired constructor(
             print()
         }.andExpect {
             status().isNotFound
-            jsonPath("message").value("Payer not found.")
-            jsonPath("details.reason").value("Payer with id $payerExternalId doesn't exists.")
+            jsonPath("message", `is`("Payer not found."))
+            jsonPath("details.reason", `is`("Payer with id $payerExternalId doesn't exists."))
         }
     }
 
@@ -141,8 +142,8 @@ class TransferRestAdapterIntegrationTest @Autowired constructor(
             print()
         }.andExpect {
             status().isNotFound
-            jsonPath("message").value("Payee not found.")
-            jsonPath("details.reason").value("Payee with id $payeeExternalId doesn't exists.")
+            jsonPath("message", `is`("Payee not found."))
+            jsonPath("details.reason", `is`("Payee with id $payeeExternalId doesn't exists."))
         }
     }
 
@@ -163,8 +164,8 @@ class TransferRestAdapterIntegrationTest @Autowired constructor(
             print()
         }.andExpect {
             status().isForbidden
-            jsonPath("message").value("Invalid payer.")
-            jsonPath("details.reason").value("Payer should not be legal for this kind of transaction.")
+            jsonPath("message", `is`("Invalid payer."))
+            jsonPath("details.reason", `is`("Payer should not be legal for this kind of transaction."))
         }
     }
 
@@ -177,8 +178,8 @@ class TransferRestAdapterIntegrationTest @Autowired constructor(
     fun `should respond with http code FORBIDDEN when payer don't have enough balance for the transfer`() {
         val transfer = DoTransferRequest(
             value = BigDecimal("100"),
-            payer = UUID.fromString("1cd70610-c298-4288-a3ca-a9f85babf3d7"),
-            payee = UUID.fromString("d15fd044-fbbd-4fb4-b085-e7245cdac7c1")
+            payer = UUID.fromString("d15fd044-fbbd-4fb4-b085-e7245cdac7c1"),
+            payee = UUID.fromString("1cd70610-c298-4288-a3ca-a9f85babf3d7")
         )
 
         mockMvc.post("/api/transfer") {
@@ -188,8 +189,8 @@ class TransferRestAdapterIntegrationTest @Autowired constructor(
             print()
         }.andExpect {
             status().isForbidden
-            jsonPath("message").value("Insufficient balance.")
-            jsonPath("details.reason").value("Payer don't have enough balance in the wallet for this transaction.")
+            jsonPath("message", `is`("Insufficient balance."))
+            jsonPath("details.reason", `is`("Payer don't have enough balance in the wallet for this transaction."))
         }
     }
 

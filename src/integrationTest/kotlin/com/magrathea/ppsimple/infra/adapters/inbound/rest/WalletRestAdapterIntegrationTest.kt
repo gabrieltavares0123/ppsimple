@@ -3,6 +3,8 @@ package com.magrathea.ppsimple.infra.adapters.inbound.rest
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.magrathea.ppsimple.infra.BaseIntegrationTest
 import com.magrathea.ppsimple.infra.adapters.inbound.rest.data.requests.CreateWalletRequest
+import org.hamcrest.CoreMatchers.`is`
+import org.hamcrest.CoreMatchers.notNullValue
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
@@ -11,7 +13,6 @@ import org.springframework.http.MediaType
 import org.springframework.test.context.jdbc.Sql
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.post
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import java.math.BigDecimal
 
@@ -40,7 +41,7 @@ class WalletRestAdapterIntegrationTest @Autowired constructor(
             print()
         }.andExpect {
             status().isCreated
-            jsonPath("externalId").isNotEmpty
+            jsonPath("externalId", `is`(notNullValue()))
         }
     }
 
@@ -61,11 +62,11 @@ class WalletRestAdapterIntegrationTest @Autowired constructor(
             print()
         }.andExpect {
             status().isUnprocessableEntity
-            jsonPath("status").value("UNPROCESSABLE_ENTITY")
-            jsonPath("message").value("Invalid owner name.")
-            jsonPath("details.field").value("ownerName")
-            jsonPath("details.invalid_value").value("empty")
-            jsonPath("details.expected_format").value("Field should not be empty.")
+            jsonPath("status", `is`("UNPROCESSABLE_ENTITY"))
+            jsonPath("message", `is`("Invalid owner name."))
+            jsonPath("details.field", `is`("ownerName"))
+            jsonPath("details.invalid_value", `is`("empty"))
+            jsonPath("details.expected_format", `is`("Field should not be empty."))
         }
     }
 
@@ -86,11 +87,11 @@ class WalletRestAdapterIntegrationTest @Autowired constructor(
             print()
         }.andExpect {
             status().isUnprocessableEntity
-            jsonPath("status").value("UNPROCESSABLE_ENTITY")
-            jsonPath("message").value("Invalid owner name.")
-            jsonPath("details.field").value("ownerName")
-            jsonPath("details.invalid_value").value("aa")
-            jsonPath("details.expected_format").value("Field should be at last 3 digits length.")
+            jsonPath("status", `is`("UNPROCESSABLE_ENTITY"))
+            jsonPath("message", `is`("Invalid owner name."))
+            jsonPath("details.field", `is`("ownerName"))
+            jsonPath("details.invalid_value", `is`("aa"))
+            jsonPath("details.expected_format", `is`("Field should be at last 3 digits length."))
         }
     }
 
@@ -111,11 +112,11 @@ class WalletRestAdapterIntegrationTest @Autowired constructor(
             print()
         }.andExpect {
             status().isUnprocessableEntity
-            jsonPath("status").value("UNPROCESSABLE_ENTITY")
-            jsonPath("message").value("Invalid document.")
-            jsonPath("details.field").value("document")
-            jsonPath("details.invalid_value").value("empty")
-            jsonPath("details.expected_format").value("Should not be empty.")
+            jsonPath("status", `is`("UNPROCESSABLE_ENTITY"))
+            jsonPath("message", `is`("Invalid document."))
+            jsonPath("details.field", `is`("document"))
+            jsonPath("details.invalid_value", `is`("empty"))
+            jsonPath("details.expected_format", `is`("Should not be empty."))
         }
     }
 
@@ -136,11 +137,14 @@ class WalletRestAdapterIntegrationTest @Autowired constructor(
             print()
         }.andExpect {
             status().isUnprocessableEntity
-            jsonPath("status").value("UNPROCESSABLE_ENTITY")
-            jsonPath("message").value("Invalid document.")
-            jsonPath("details.field").value("document")
-            jsonPath("details.invalid_value").value("000.000.000-")
-            jsonPath("details.expected_format").value("Field should have length of 11 digits for CPF or 14 digits for CNPJ.")
+            jsonPath("status", `is`("UNPROCESSABLE_ENTITY"))
+            jsonPath("message", `is`("Invalid document."))
+            jsonPath("details.field", `is`("document"))
+            jsonPath("details.invalid_value", `is`("000.000.000-"))
+            jsonPath(
+                "details.expected_format",
+                `is`("Field should have length of 11 digits for CPF or 14 digits for CNPJ.")
+            )
         }
     }
 
@@ -161,11 +165,11 @@ class WalletRestAdapterIntegrationTest @Autowired constructor(
             print()
         }.andExpect {
             status().isUnprocessableEntity
-            jsonPath("status").value("UNPROCESSABLE_ENTITY")
-            jsonPath("message").value("Invalid balance.")
-            jsonPath("details.field").value("balance")
-            jsonPath("details.invalid_value").value(-1)
-            jsonPath("details.expected_format").value("Field should not be negative.")
+            jsonPath("status", `is`("UNPROCESSABLE_ENTITY"))
+            jsonPath("message", `is`("Invalid balance."))
+            jsonPath("details.field", `is`("balance"))
+            jsonPath("details.invalid_value", `is`(-1))
+            jsonPath("details.expected_format", `is`("Field should not be negative."))
         }
     }
 
@@ -174,7 +178,7 @@ class WalletRestAdapterIntegrationTest @Autowired constructor(
         val wallet = CreateWalletRequest(
             ownerName = "Owner name",
             document = "000.000.000-00",
-            balance = BigDecimal("-1"),
+            balance = BigDecimal("1"),
             email = "",
             password = "12345678"
         )
@@ -186,11 +190,11 @@ class WalletRestAdapterIntegrationTest @Autowired constructor(
             print()
         }.andExpect {
             status().isUnprocessableEntity
-            jsonPath("status").value("UNPROCESSABLE_ENTITY")
-            jsonPath("message").value("Invalid e-mail.")
-            jsonPath("details.field").value("balance")
-            jsonPath("details.invalid_value").value("empty")
-            jsonPath("details.expected_format").value("Field should not be empty.")
+            jsonPath("status", `is`("UNPROCESSABLE_ENTITY"))
+            jsonPath("message", `is`("Invalid e-mail."))
+            jsonPath("details.field", `is`("email"))
+            jsonPath("details.invalid_value", `is`("empty"))
+            jsonPath("details.expected_format", `is`("Field should not be empty."))
         }
     }
 
@@ -211,11 +215,11 @@ class WalletRestAdapterIntegrationTest @Autowired constructor(
             print()
         }.andExpect {
             status().isUnprocessableEntity
-            jsonPath("status").value("UNPROCESSABLE_ENTITY")
-            jsonPath("message").value("Invalid e-mail.")
-            jsonPath("details.field").value("balance")
-            jsonPath("details.invalid_value").value("gabriel @mail.com")
-            jsonPath("details.expected_format").value("Field should not be empty.")
+            jsonPath("status", `is`("UNPROCESSABLE_ENTITY"))
+            jsonPath("message", `is`("Invalid e-mail."))
+            jsonPath("details.field", `is`("email"))
+            jsonPath("details.invalid_value", `is`("gabriel @mail.com"))
+            jsonPath("details.expected_format", `is`("Field should be a valid e-mail ex: user@mail.com"))
         }
     }
 
@@ -236,11 +240,11 @@ class WalletRestAdapterIntegrationTest @Autowired constructor(
             print()
         }.andExpect {
             status().isUnprocessableEntity
-            jsonPath("status").value("UNPROCESSABLE_ENTITY")
-            jsonPath("message").value("Invalid password.")
-            jsonPath("details.field").value("password")
-            jsonPath("details.invalid_value").value("empty")
-            jsonPath("details.expected_format").value("Field should not be empty.")
+            jsonPath("status", `is`("UNPROCESSABLE_ENTITY"))
+            jsonPath("message", `is`("Invalid password."))
+            jsonPath("details.field", `is`("password"))
+            jsonPath("details.invalid_value", `is`("empty"))
+            jsonPath("details.expected_format", `is`("Field should not be empty."))
         }
     }
 
@@ -261,11 +265,11 @@ class WalletRestAdapterIntegrationTest @Autowired constructor(
             print()
         }.andExpect {
             status().isUnprocessableEntity
-            jsonPath("status").value("UNPROCESSABLE_ENTITY")
-            jsonPath("message").value("Invalid password.")
-            jsonPath("details.field").value("password")
-            jsonPath("details.invalid_value").value("123")
-            jsonPath("details.expected_format").value("Field should be at last 8 digits length.")
+            jsonPath("status", `is`("UNPROCESSABLE_ENTITY"))
+            jsonPath("message", `is`("Invalid password."))
+            jsonPath("details.field", `is`("password"))
+            jsonPath("details.invalid_value", `is`("123"))
+            jsonPath("details.expected_format", `is`("Field should be at last 8 digits length."))
         }
     }
 

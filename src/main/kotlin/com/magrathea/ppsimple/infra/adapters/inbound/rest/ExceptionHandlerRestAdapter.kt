@@ -24,7 +24,7 @@ class ExceptionHandlerRestAdapter {
     fun handleDomainException(de: DomainException): ResponseEntity<RestError> {
         val restError = RestError(
             status = HttpStatus.INTERNAL_SERVER_ERROR.name,
-            message = de.message ?: "Failed.",
+            message = de.message,
             details = de.details
         )
 
@@ -36,7 +36,7 @@ class ExceptionHandlerRestAdapter {
     fun handleIllegalArgumentDomainException(de: IllegalArgumentDomainException): ResponseEntity<RestError> {
         val restError = RestError(
             status = HttpStatus.UNPROCESSABLE_ENTITY.name,
-            message = de.message ?: "Failed.",
+            message = de.message,
             details = de.details
         )
 
@@ -48,7 +48,7 @@ class ExceptionHandlerRestAdapter {
     fun handleInsufficientBalanceDomainException(de: InsufficientBalanceDomainException): ResponseEntity<RestError> {
         val restError = RestError(
             status = HttpStatus.FORBIDDEN.name,
-            message = de.message ?: "Failed.",
+            message = de.message,
             details = de.details
         )
 
@@ -60,7 +60,7 @@ class ExceptionHandlerRestAdapter {
     fun handlePayerEligibilityDomainException(de: PayerEligibilityDomainException): ResponseEntity<RestError> {
         val restError = RestError(
             status = HttpStatus.FORBIDDEN.name,
-            message = de.message ?: "Failed.",
+            message = de.message,
             details = de.details
         )
 
@@ -72,7 +72,7 @@ class ExceptionHandlerRestAdapter {
     fun handlePayerNotFoundDomainException(de: PayerNotFoundDomainException): ResponseEntity<RestError> {
         val restError = RestError(
             status = HttpStatus.NOT_FOUND.name,
-            message = de.message ?: "Failed.",
+            message = de.message,
             details = de.details
         )
 
@@ -84,7 +84,7 @@ class ExceptionHandlerRestAdapter {
     fun handlePayeeNotFoundDomainException(de: PayeeNotFoundDomainException): ResponseEntity<RestError> {
         val restError = RestError(
             status = HttpStatus.NOT_FOUND.name,
-            message = de.message ?: "Failed.",
+            message = de.message,
             details = de.details
         )
 
@@ -96,7 +96,7 @@ class ExceptionHandlerRestAdapter {
     fun handleTransactionDomainException(de: TransactionDomainException): ResponseEntity<RestError> {
         val restError = RestError(
             status = HttpStatus.INTERNAL_SERVER_ERROR.name,
-            message = de.message ?: "Failed.",
+            message = de.message,
             details = de.details
         )
 
@@ -108,7 +108,7 @@ class ExceptionHandlerRestAdapter {
     fun handleUnauthorizedTransferDomainException(de: UnauthorizedTransferDomainException): ResponseEntity<RestError> {
         val restError = RestError(
             status = HttpStatus.FORBIDDEN.name,
-            message = de.message ?: "Failed.",
+            message = de.message,
             details = de.details
         )
 
