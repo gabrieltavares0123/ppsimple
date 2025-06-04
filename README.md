@@ -34,6 +34,7 @@ Segue um desenho da arquitetura:
 ### Criar uma nova carteira
 ```
 curl --location 'http://127.0.0.1:8080/api/wallet' \
+--header 'Content-Type: application/json' \
 --data-raw '{
   "ownerName": "Gabriel Jorge",
   "document": "000.000.000-00",
