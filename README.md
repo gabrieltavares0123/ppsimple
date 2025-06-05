@@ -9,8 +9,10 @@ Esta é uma versão simlpificada do PicPay que contempla a funcionalidade de tra
 - ```Gradle``` como construtor;
 - ```Docker compose``` para containizar a aplicação e aplicações dependentes;
 - ```Spring Cloud Kafka``` para mensageria;
-- ```Testcontainers``` para realizar ```testes de integração``` e ```testes ponta a ponta``` em containers ```Docker```.
-- ```PostgreSQL``` como banco de dados relacional.
+- ```Testcontainers``` para realizar ```testes de integração``` e ```testes ponta a ponta``` em containers ```Docker```;
+- ```PostgreSQL``` como banco de dados relacional;
+- ```Ktlint``` para as verificações de padrões de escrita;
+
 ## Decisões
 Tomei a liberdade de usar alguns conceitos usados em aplicações reais na solução;
 - Para não expor os identificadores dos usuários, criei identificadores externos baseados em ```UUID```;
@@ -26,9 +28,26 @@ Segue um desenho da arquitetura:
 ![alt text](docs/ppsimple-architecture.png)
 
 ## Como executar a aplicação
+Na raíz do projeto existe um ```Makefile``` com agrupamentos de comandos para funcionar como um ```CI``` local. Segue a lista dos comandos com suas descrições:
+
+1. ```clean``` para remover artefatos gerando anteriormente;
+2. ```jar``` para gerar o executável;
+3. ```test``` para executar todos os testes da aplicação;
+4. ```lint``` para realizar o lint da aplicação;
+5. ```build``` para realizar todo o processo de build;
+6. ```down``` para "derrubar" os containers ```Docker```;
+7. ```up``` para realizar o processo de build e subir todos os containers;
+8. ```restart``` que derruba todos os containers ```Docker``` e realiza novamente todo o processo de ```up```;
+
+### Exeutar de forma automatizada usando ```make```
+- Basta executa o comando ```make up```;
+- A aplicação ficará disponível em ```http:127.0.0.1:8080```;
+
+### Executar manualmente via Intellij Community 
 - Na raíz da aplicação execute ```./gradlew bootJar``` para gerar o executável;
 - Em seguida execute ```docker compose up --build -d``` para construir a imagem da aplicação, subir seu container e os containers dependentes;
 - A aplicação ficará disponível em ```http:127.0.0.1:8080```;
+
 
 ## API
 ### Criar uma nova carteira
