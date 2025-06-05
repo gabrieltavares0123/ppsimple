@@ -35,12 +35,12 @@ Na raíz do projeto existe um ```Makefile``` com agrupamentos de comandos para f
 3. ```test``` para executar todos os testes da aplicação;
 4. ```lint``` para realizar o lint da aplicação;
 5. ```build``` para realizar todo o processo de build;
-6. ```down``` para "derrubar" os containers ```Docker```;
+6. ```down``` para derrubar os containers ```Docker```;
 7. ```up``` para realizar o processo de build e subir todos os containers;
 8. ```restart``` que derruba todos os containers ```Docker``` e realiza novamente todo o processo de ```up```;
 
-### Exeutar de forma automatizada usando ```make```
-- Basta executa o comando ```make up```;
+### Executar de forma automatizada usando ```make```
+- Basta usar o comando ```make up```;
 - A aplicação ficará disponível em ```http:127.0.0.1:8080```;
 
 ### Executar manualmente via Intellij Community 
