@@ -40,16 +40,21 @@ Na raíz do projeto existe um ```Makefile``` com agrupamentos de comandos para f
 8. ```restart``` que derruba todos os containers ```Docker``` e realiza novamente todo o processo de ```up```;
 
 ### Executar de forma automatizada usando ```make```
-- Basta usar o comando ```make up```;
-- A aplicação ficará disponível em ```http:127.0.0.1:8080```;
+Se estiver em ambiente ```Windows``` e ainda assim deseja usar o ```make```, siga os passos ```1``` e ```2```, caso contrário, pule para os passos seguintes:
+1. Baixe o ```Chocolatey``` por [aqui](https://chocolatey.org/install);
+2. Em seguida instale o ```make``` com o comando: ```choco install make```;
+3. Use o comando ```make up```;
+4. A aplicação ficará disponível em ```http:127.0.0.1:8080```;
 
 ### Executar manualmente via Intellij Community 
-- Na raíz da aplicação execute ```./gradlew bootJar``` para gerar o executável;
-- Em seguida execute ```docker compose up --build -d``` para construir a imagem da aplicação, subir seu container e os containers dependentes;
-- A aplicação ficará disponível em ```http:127.0.0.1:8080```;
+1. Na raíz da aplicação execute ```./gradlew bootJar``` para gerar o executável;
+2. Em seguida execute ```docker compose up --build -d``` para construir a imagem da aplicação, subir seu container e os containers dependentes;
+3. A aplicação ficará disponível em ```http:127.0.0.1:8080```;
 
 
 ## API
+Na raís do projeto existe uma coleção do ```Postman``` no [arquivo](PpSimple.postman_collection.json) para testar os endpoints. Caso deseje, pode copiar o ```curl``` dos endpoints abaixo.
+
 ### Criar uma nova carteira
 ```
 curl --location 'http://127.0.0.1:8080/api/wallet' \
