@@ -9,7 +9,6 @@ import java.util.concurrent.CountDownLatch
 
 @Component
 class NotificationMessagingConsumerAdapter : NotificationMessagingConsumer {
-
     private var latch = CountDownLatch(1)
     private var lastPayload = ""
 
@@ -29,5 +28,4 @@ class NotificationMessagingConsumerAdapter : NotificationMessagingConsumer {
     }
 
     override fun getLastPayload(): String = lastPayload
-
 }

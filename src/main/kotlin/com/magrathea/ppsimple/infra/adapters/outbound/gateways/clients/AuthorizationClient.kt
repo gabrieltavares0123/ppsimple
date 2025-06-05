@@ -9,12 +9,10 @@ import org.springframework.web.bind.annotation.ResponseBody
 @FeignClient(
     name = "transfer-authorization-client",
     url = "\${gateway.transfer-authorization-gateway-url}",
-    fallback = AuthorizationClientFallBack::class
+    fallback = AuthorizationClientFallBack::class,
 )
 interface AuthorizationClient {
-
     @GetMapping("/authorize")
     @ResponseBody
     fun authorize(): ResponseEntity<AuthorizationDto>
-
 }

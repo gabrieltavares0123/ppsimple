@@ -4,7 +4,6 @@ import com.magrathea.ppsimple.domain.Notification
 import java.util.concurrent.CountDownLatch
 
 interface NotificationMessagingConsumer {
-
     fun consume(notification: Notification)
 
     fun getLatch(): CountDownLatch
@@ -12,5 +11,4 @@ interface NotificationMessagingConsumer {
     fun resetLatch()
 
     fun getLastPayload(): String
-
 }

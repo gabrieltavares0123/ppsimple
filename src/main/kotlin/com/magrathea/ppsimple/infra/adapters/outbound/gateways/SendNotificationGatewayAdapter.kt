@@ -9,21 +9,23 @@ import org.springframework.stereotype.Component
 
 @Component
 class SendNotificationGatewayAdapter(
-    private val notificationClient: NotificationClient
+    private val notificationClient: NotificationClient,
 ) : SendNotificationGateway {
-
     private val logger = LoggerFactory.getLogger(SendNotificationGatewayAdapter::class.java)
 
     override fun send(notification: Notification): Boolean {
-
         logger.info("Start request send notification.")
 
         return try {
             val result = notificationClient.notify()
-            logger.info("Finish request to send notification with success code ${result.statusCode} and body ${result.body}.")
+            logger.info(
+                "Finish request to send notification with success code ${result.statusCode} and body ${result.body}.",
+            )
             true
         } catch (fe: FeignException) {
-            logger.info("Failed request to send notification with error code ${fe.status()} and body ${fe.responseBody()}.")
+            logger.info(
+                "Failed request to send notification with error code ${fe.status()} and body ${fe.responseBody()}.",
+            )
             false
         }
     }

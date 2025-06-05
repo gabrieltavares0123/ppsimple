@@ -4,6 +4,7 @@ plugins {
     id("org.springframework.boot") version "3.4.3"
     id("io.spring.dependency-management") version "1.1.7"
     kotlin("plugin.jpa") version "1.9.25"
+    id("org.jlleitschuh.gradle.ktlint") version "12.3.0"
 }
 
 group = "com.magrathea"
@@ -42,7 +43,6 @@ val end2endTestImplementation: Configuration by configurations.getting {
 
 configurations["integrationTestImplementation"].extendsFrom(configurations.runtimeOnly.get())
 configurations["end2endTestImplementation"].extendsFrom(configurations.runtimeOnly.get())
-
 
 dependencies {
     developmentOnly("org.springframework.boot:spring-boot-devtools")
@@ -116,8 +116,9 @@ allOpen {
     annotation("jakarta.persistence.Embeddable")
 }
 
-val integrationTest = tasks.register<Test>("integrationTest") {
+tasks.register<Test>("integrationTest") {
     description = "Runs integration tests."
+
     group = "verification"
 
     testClassesDirs = sourceSets["integrationTest"].output.classesDirs
@@ -125,8 +126,9 @@ val integrationTest = tasks.register<Test>("integrationTest") {
     shouldRunAfter("test")
 }
 
-val end2endTest = tasks.register<Test>("end2endTest") {
+tasks.register<Test>("end2endTest") {
     description = "Runs end-to-end tests."
+
     group = "verification"
 
     testClassesDirs = sourceSets["end2endTest"].output.classesDirs
@@ -152,6 +154,8 @@ tasks.getByName<Test>("integrationTest") {
     testLogging {
         events("passed")
     }
+
+    mustRunAfter("test")
 }
 
 tasks.getByName<Test>("end2endTest") {
@@ -162,6 +166,8 @@ tasks.getByName<Test>("end2endTest") {
     testLogging {
         events("passed")
     }
+
+    mustRunAfter("integrationTest")
 }
 
 tasks.named<ProcessResources>("processEnd2endTestResources") {
@@ -172,7 +178,6 @@ tasks.named<ProcessResources>("processIntegrationTestResources") {
     duplicatesStrategy = DuplicatesStrategy.INCLUDE
 }
 
-tasks.check {
-    dependsOn(integrationTest)
-    dependsOn(end2endTest)
+tasks.named("check") {
+    dependsOn("test", "integrationTest", "end2endTest")
 }

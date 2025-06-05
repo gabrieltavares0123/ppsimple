@@ -5,11 +5,12 @@ import java.math.BigDecimal
 import java.util.UUID
 
 interface WalletPersistence {
-
     fun findBy(externalId: UUID): Wallet?
 
     fun save(wallet: Wallet): Wallet
 
-    fun updateBalance(externalId: UUID, newBalance: BigDecimal)
-
+    fun updateBalance(
+        externalId: UUID,
+        newBalance: BigDecimal,
+    )
 }

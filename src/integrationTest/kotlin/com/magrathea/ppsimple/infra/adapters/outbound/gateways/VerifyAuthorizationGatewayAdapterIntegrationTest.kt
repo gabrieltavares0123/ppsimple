@@ -23,39 +23,39 @@ import kotlin.test.assertNotNull
 @EnableWireMock(ConfigureWireMock(port = 60085))
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 @RunWith(SpringRunner::class)
-class VerifyAuthorizationGatewayAdapterIntegrationTest @Autowired constructor(
-    private val authorizationGateway: VerifyAuthorizationGateway
-) : BaseIntegrationTest() {
+class VerifyAuthorizationGatewayAdapterIntegrationTest
+    @Autowired
+    constructor(
+        private val authorizationGateway: VerifyAuthorizationGateway,
+    ) : BaseIntegrationTest() {
+        @Test
+        fun `should respond with authorization true`() {
+            stubFor(
+                get(urlEqualTo("/authorize"))
+                    .willReturn(
+                        okJson("{\"status\":\"success\",\"data\":{\"authorization\":true }}"),
+                    ),
+            )
 
-    @Test
-    fun `should respond with authorization true`() {
-        stubFor(
-            get(urlEqualTo("/authorize"))
-                .willReturn(
-                    okJson("{\"status\":\"success\",\"data\":{\"authorization\":true }}")
-                )
-        )
+            val result = authorizationGateway.isAuthorized()
 
-        val result = authorizationGateway.isAuthorized()
+            assertNotNull(result)
+            assertTrue(result)
+        }
 
-        assertNotNull(result)
-        assertTrue(result)
+        @Test
+        fun `should respond with authorization false`() {
+            stubFor(
+                get(urlEqualTo("/authorize"))
+                    .willReturn(
+                        forbidden()
+                            .withBody("{\"status\":\"fail\",\"data\":{\"authorization\":false }}"),
+                    ),
+            )
+
+            val result = authorizationGateway.isAuthorized()
+
+            assertNotNull(result)
+            assertFalse(result)
+        }
     }
-
-    @Test
-    fun `should respond with authorization false`() {
-        stubFor(
-            get(urlEqualTo("/authorize"))
-                .willReturn(
-                    forbidden()
-                        .withBody("{\"status\":\"fail\",\"data\":{\"authorization\":false }}")
-                )
-        )
-
-        val result = authorizationGateway.isAuthorized()
-
-        assertNotNull(result)
-        assertFalse(result)
-    }
-
-}

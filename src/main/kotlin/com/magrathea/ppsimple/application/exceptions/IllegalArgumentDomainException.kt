@@ -4,12 +4,8 @@ class IllegalArgumentDomainException(
     message: String,
     field: String,
     invalidValue: Any,
-    expectedFormat: String
+    expectedFormat: String,
 ) : DomainException(
-    message = message,
-    details = mapOf(
-        "field" to field,
-        "invalid_value" to invalidValue,
-        "expected_format" to expectedFormat
+        message = message,
+        details = mapOf("field" to field, "invalid_value" to invalidValue, "expected_format" to expectedFormat),
     )
-)

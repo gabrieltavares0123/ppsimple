@@ -7,5 +7,5 @@ data class CreateWalletRequest(
     val document: String,
     val balance: BigDecimal,
     val email: String,
-    val password: String
+    val password: String,
 )

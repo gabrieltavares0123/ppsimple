@@ -15,27 +15,25 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 @RequestMapping("/api")
 class TransferRestAdapter(
-    private val doTransferService: DoTransferService
+    private val doTransferService: DoTransferService,
 ) {
     @PostMapping(
         "/transfer",
         consumes = [MediaType.APPLICATION_JSON_VALUE],
-        produces = [MediaType.APPLICATION_JSON_VALUE]
+        produces = [MediaType.APPLICATION_JSON_VALUE],
     )
     fun doTransfer(
-        @RequestBody doTransferRequest: DoTransferRequest
+        @RequestBody doTransferRequest: DoTransferRequest,
     ): ResponseEntity<TransferResponse> {
-
         val result = doTransferService.execute(doTransferRequest.toDoTransferUseCaseInput())
         val response = TransferResponse(externalId = result)
-
         return ResponseEntity.status(HttpStatus.CREATED).body(response)
     }
 
-    private fun DoTransferRequest.toDoTransferUseCaseInput() = DoTransferUseCase.Input(
-        payer = this.payer,
-        payee = this.payee,
-        value = this.value
-    )
-
+    private fun DoTransferRequest.toDoTransferUseCaseInput() =
+        DoTransferUseCase.Input(
+            payer = this.payer,
+            payee = this.payee,
+            value = this.value,
+        )
 }

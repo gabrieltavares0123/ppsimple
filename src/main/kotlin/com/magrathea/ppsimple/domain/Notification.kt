@@ -11,5 +11,5 @@ data class Notification(
     val payeeExternalId: UUID,
     val value: BigDecimal,
     val type: TransferType,
-    val createdAt: LocalDateTime
+    val createdAt: LocalDateTime,
 )

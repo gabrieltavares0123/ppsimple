@@ -30,7 +30,6 @@ import kotlin.test.assertTrue
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class WalletRestAdapterEndToEndTest : BaseEndToEndTest() {
-
     @LocalServerPort
     private var port: Int = 0
 
@@ -42,15 +41,16 @@ class WalletRestAdapterEndToEndTest : BaseEndToEndTest() {
             get("/authorize")
                 .willReturn(
                     created()
-                        .withBody("{\"status\":\"success\",\"data\":{\"authorization\": true }}")
-                )
+                        .withBody("{\"status\":\"success\",\"data\":{\"authorization\": true }}"),
+                ),
         )
     }
 
     @Test
     @Sql(scripts = ["/sql/cleanup_wallet.sql"], executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     fun `should respond with 201 CREATED with an externalId when creating a new wallet`() {
-        val requestBody = """
+        val requestBody =
+            """
             {
                 "ownerName": "New Wallet",
                 "document": "000.000.000-99",
@@ -58,7 +58,7 @@ class WalletRestAdapterEndToEndTest : BaseEndToEndTest() {
                 "email": "new.wallet@mail.com",
                 "password": "12345678"
             }
-        """.trimIndent()
+            """.trimIndent()
 
         Given {
             contentType(ContentType.JSON)
@@ -80,7 +80,8 @@ class WalletRestAdapterEndToEndTest : BaseEndToEndTest() {
 
     @Test
     fun `should respond with 422 UNPROCESSABLE_ENTITY when creating a new wallet and ownerName is empty`() {
-        val requestBody = """
+        val requestBody =
+            """
             {
                 "ownerName": "",
                 "document": "000.000.000-00",
@@ -88,7 +89,7 @@ class WalletRestAdapterEndToEndTest : BaseEndToEndTest() {
                 "email": "gabriel.jorge@mail.com",
                 "password": "12345678"
             }
-        """.trimIndent()
+            """.trimIndent()
 
         Given {
             contentType(ContentType.JSON)
@@ -109,7 +110,8 @@ class WalletRestAdapterEndToEndTest : BaseEndToEndTest() {
 
     @Test
     fun `should respond with 422 UNPROCESSABLE_ENTITY when creating a new wallet and ownerName is too short`() {
-        val requestBody = """
+        val requestBody =
+            """
             {
                 "ownerName": "Ga",
                 "document": "000.000.000-00",
@@ -117,7 +119,7 @@ class WalletRestAdapterEndToEndTest : BaseEndToEndTest() {
                 "email": "gabriel.jorge@mail.com",
                 "password": "12345678"
             }
-        """.trimIndent()
+            """.trimIndent()
 
         Given {
             contentType(ContentType.JSON)
@@ -138,7 +140,8 @@ class WalletRestAdapterEndToEndTest : BaseEndToEndTest() {
 
     @Test
     fun `should respond with 422 UNPROCESSABLE_ENTITY when creating a new wallet with empty document`() {
-        val requestBody = """
+        val requestBody =
+            """
             {
                 "ownerName": "Gabriel Jorge",
                 "document": "",
@@ -146,7 +149,7 @@ class WalletRestAdapterEndToEndTest : BaseEndToEndTest() {
                 "email": "gabriel.jorge@mail.com",
                 "password": "12345678"
             }
-        """.trimIndent()
+            """.trimIndent()
 
         Given {
             contentType(ContentType.JSON)
@@ -167,7 +170,8 @@ class WalletRestAdapterEndToEndTest : BaseEndToEndTest() {
 
     @Test
     fun `should respond with 422 UNPROCESSABLE_ENTITY when creating a new wallet and document has invalid digits length`() {
-        val requestBody = """
+        val requestBody =
+            """
             {
                 "ownerName": "Gabriel Jorge",
                 "document": "000.000.000-",
@@ -175,7 +179,7 @@ class WalletRestAdapterEndToEndTest : BaseEndToEndTest() {
                 "email": "gabriel.jorge@mail.com",
                 "password": "12345678"
             }
-        """.trimIndent()
+            """.trimIndent()
 
         Given {
             contentType(ContentType.JSON)
@@ -192,14 +196,15 @@ class WalletRestAdapterEndToEndTest : BaseEndToEndTest() {
             body("details.invalid_value", equalTo("000.000.000-"))
             body(
                 "details.expected_format",
-                equalTo("Field should have length of 11 digits for CPF or 14 digits for CNPJ.")
+                equalTo("Field should have length of 11 digits for CPF or 14 digits for CNPJ."),
             )
         }
     }
 
     @Test
     fun `should respond with 422 UNPROCESSABLE_ENTITY when creating a new wallet and balance is negative`() {
-        val requestBody = """
+        val requestBody =
+            """
             {
                 "ownerName": "Gabriel Jorge",
                 "document": "000.000.000-00",
@@ -207,7 +212,7 @@ class WalletRestAdapterEndToEndTest : BaseEndToEndTest() {
                 "email": "gabriel.jorge@mail.com",
                 "password": "12345678"
             }
-        """.trimIndent()
+            """.trimIndent()
 
         Given {
             contentType(ContentType.JSON)
@@ -228,7 +233,8 @@ class WalletRestAdapterEndToEndTest : BaseEndToEndTest() {
 
     @Test
     fun `should respond with 422 UNPROCESSABLE_ENTITY when creating a new wallet and email is empty`() {
-        val requestBody = """
+        val requestBody =
+            """
             {
                 "ownerName": "Gabriel Jorge",
                 "document": "000.000.000-00",
@@ -236,7 +242,7 @@ class WalletRestAdapterEndToEndTest : BaseEndToEndTest() {
                 "email": "",
                 "password": "12345678"
             }
-        """.trimIndent()
+            """.trimIndent()
 
         Given {
             contentType(ContentType.JSON)
@@ -257,7 +263,8 @@ class WalletRestAdapterEndToEndTest : BaseEndToEndTest() {
 
     @Test
     fun `should respond with 422 UNPROCESSABLE_ENTITY when email has an invalid format`() {
-        val requestBody = """
+        val requestBody =
+            """
             {
                 "ownerName": "Gabriel Jorge",
                 "document": "000.000.000-00",
@@ -265,7 +272,7 @@ class WalletRestAdapterEndToEndTest : BaseEndToEndTest() {
                 "email": "gabriel.mail.com",
                 "password": "12345678"
             }
-        """.trimIndent()
+            """.trimIndent()
 
         Given {
             contentType(ContentType.JSON)
@@ -286,7 +293,8 @@ class WalletRestAdapterEndToEndTest : BaseEndToEndTest() {
 
     @Test
     fun `should respond with 422 UNPROCESSABLE_ENTITY when creating a new wallet and password is empty`() {
-        val requestBody = """
+        val requestBody =
+            """
             {
                 "ownerName": "Gabriel Jorge",
                 "document": "000.000.000-00",
@@ -294,7 +302,7 @@ class WalletRestAdapterEndToEndTest : BaseEndToEndTest() {
                 "email": "gabriel.jorge@mail.com",
                 "password": ""
             }
-        """.trimIndent()
+            """.trimIndent()
 
         Given {
             contentType(ContentType.JSON)
@@ -315,7 +323,8 @@ class WalletRestAdapterEndToEndTest : BaseEndToEndTest() {
 
     @Test
     fun `should respond with 422 UNPROCESSABLE_ENTITY when creating a new wallet and password is short`() {
-        val requestBody = """
+        val requestBody =
+            """
             {
                 "ownerName": "Gabriel Jorge",
                 "document": "000.000.000-00",
@@ -323,7 +332,7 @@ class WalletRestAdapterEndToEndTest : BaseEndToEndTest() {
                 "email": "gabriel.jorge@mail.com",
                 "password": "123"
             }
-        """.trimIndent()
+            """.trimIndent()
 
         Given {
             contentType(ContentType.JSON)
@@ -341,5 +350,4 @@ class WalletRestAdapterEndToEndTest : BaseEndToEndTest() {
             body("details.expected_format", equalTo("Field should be at last 8 digits length."))
         }
     }
-
 }

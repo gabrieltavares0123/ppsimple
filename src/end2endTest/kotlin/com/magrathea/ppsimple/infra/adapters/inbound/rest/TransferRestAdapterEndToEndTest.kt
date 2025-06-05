@@ -1,6 +1,5 @@
 package com.magrathea.ppsimple.infra.adapters.inbound.rest
 
-import com.github.tomakehurst.wiremock.client.WireMock
 import com.github.tomakehurst.wiremock.client.WireMock.forbidden
 import com.github.tomakehurst.wiremock.client.WireMock.get
 import com.github.tomakehurst.wiremock.client.WireMock.okJson
@@ -16,7 +15,6 @@ import io.restassured.module.kotlin.extensions.When
 import org.hamcrest.Matchers.emptyOrNullString
 import org.hamcrest.Matchers.equalTo
 import org.hamcrest.Matchers.not
-import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
@@ -34,7 +32,6 @@ import java.util.UUID
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class TransferRestAdapterEndToEndTest : BaseEndToEndTest() {
-
     @LocalServerPort
     private var port: Int = 0
 
@@ -45,12 +42,12 @@ class TransferRestAdapterEndToEndTest : BaseEndToEndTest() {
         stubFor(
             get(urlEqualTo("/authorize"))
                 .willReturn(
-                    okJson("{\"status\":\"success\",\"data\":{\"authorization\":true }}")
-                )
+                    okJson("{\"status\":\"success\",\"data\":{\"authorization\":true }}"),
+                ),
         ).priority = 2
 
         stubFor(
-            post(urlEqualTo("/notify"))
+            post(urlEqualTo("/notify")),
         )
     }
 
@@ -58,13 +55,14 @@ class TransferRestAdapterEndToEndTest : BaseEndToEndTest() {
     @Sql(scripts = ["/sql/setup_wallet.sql"], executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     @Sql(scripts = ["/sql/cleanup_wallet.sql"], executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     fun `should respond with 201 CREATED with an external id when executing a new transfer and it is authorized`() {
-        val requestBody = """
+        val requestBody =
+            """
             {
                 "payer": "d15fd044-fbbd-4fb4-b085-e7245cdac7c1",
                 "payee": "1cd70610-c298-4288-a3ca-a9f85babf3d7",
                 "value": 100
             }
-        """.trimIndent()
+            """.trimIndent()
 
         Given {
             contentType(ContentType.JSON)
@@ -87,17 +85,18 @@ class TransferRestAdapterEndToEndTest : BaseEndToEndTest() {
             get(urlEqualTo("/authorize"))
                 .willReturn(
                     forbidden()
-                        .withBody("{\"status\":\"fail\",\"data\":{\"authorization\":false }}")
-                )
+                        .withBody("{\"status\":\"fail\",\"data\":{\"authorization\":false }}"),
+                ),
         ).priority = 1
 
-        val requestBody = """
+        val requestBody =
+            """
             {
                 "payer": "d15fd044-fbbd-4fb4-b085-e7245cdac7c1",
                 "payee": "1cd70610-c298-4288-a3ca-a9f85babf3d7",
                 "value": 100
             }
-        """.trimIndent()
+            """.trimIndent()
 
         Given {
             contentType(ContentType.JSON)
@@ -118,13 +117,14 @@ class TransferRestAdapterEndToEndTest : BaseEndToEndTest() {
     @Sql(scripts = ["/sql/cleanup_wallet.sql"], executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     fun `should respond with 404 NOT_FOUND when executing a new transfer and payer doen't exists`() {
         val payerExternalId = UUID.fromString("d15fd044-fbbd-4fb4-b085-e7245cdac7c1")
-        val requestBody = """
+        val requestBody =
+            """
             {
                 "payer": "$payerExternalId",
                 "payee": "1cd70610-c298-4288-a3ca-a9f85babf3d7",
                 "value": 100
             }
-        """.trimIndent()
+            """.trimIndent()
 
         Given {
             contentType(ContentType.JSON)
@@ -145,13 +145,14 @@ class TransferRestAdapterEndToEndTest : BaseEndToEndTest() {
     @Sql(scripts = ["/sql/cleanup_wallet.sql"], executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     fun `should respond with 404 NOT_FOUND when executing a new transafer and payee doen't exists`() {
         val payeeExternalId = UUID.fromString("1cd70610-c298-4288-a3ca-a9f85babf3d7")
-        val requestBody = """
+        val requestBody =
+            """
             {
                 "payer": "d15fd044-fbbd-4fb4-b085-e7245cdac7c1",
                 "payee": "$payeeExternalId",
                 "value": 100
             }
-        """.trimIndent()
+            """.trimIndent()
 
         Given {
             contentType(ContentType.JSON)
@@ -171,13 +172,14 @@ class TransferRestAdapterEndToEndTest : BaseEndToEndTest() {
     @Sql(scripts = ["/sql/setup_wallet_with_legal_payer.sql"], executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     @Sql(scripts = ["/sql/cleanup_wallet.sql"], executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     fun `should respond with http code FORBIDDEN when executing a transfer and payer is legal`() {
-        val requestBody = """
+        val requestBody =
+            """
             {
                 "payer": "1cd70610-c298-4288-a3ca-a9f85babf3d7",
                 "payee": "d15fd044-fbbd-4fb4-b085-e7245cdac7c1",
                 "value": 100
             }
-        """.trimIndent()
+            """.trimIndent()
 
         Given {
             contentType(ContentType.JSON)
@@ -196,17 +198,18 @@ class TransferRestAdapterEndToEndTest : BaseEndToEndTest() {
     @Test
     @Sql(
         scripts = ["/sql/setup_wallet_with_payer_insufficient_balance.sql"],
-        executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD
+        executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD,
     )
     @Sql(scripts = ["/sql/cleanup_wallet.sql"], executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     fun `should respond with http code FORBIDDEN when payer don't have enough balance for the trasnfer`() {
-        val requestBody = """
+        val requestBody =
+            """
             {
                 "payer": "d15fd044-fbbd-4fb4-b085-e7245cdac7c1",
                 "payee": "1cd70610-c298-4288-a3ca-a9f85babf3d7",
                 "value": 100
             }
-        """.trimIndent()
+            """.trimIndent()
 
         Given {
             contentType(ContentType.JSON)

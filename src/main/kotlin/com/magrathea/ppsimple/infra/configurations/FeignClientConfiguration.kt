@@ -7,11 +7,9 @@ import org.springframework.context.annotation.Configuration
 
 @Configuration
 class FeignClientConfiguration() {
-
     @Bean
     fun provideOkHttpClient(): OkHttpClient = OkHttpClient()
 
     @Bean
     fun provideLoggerLevel(): Logger.Level = Logger.Level.FULL
-
 }

@@ -12,7 +12,6 @@ import java.util.UUID
 class TransferPersistenceAdapter(
     private val transferJpaRepository: TransferJpaRepository,
 ) : TransferPersistence {
-
     override fun save(transfer: Transfer): Transfer {
         val entity = transfer.toTransferJpaEntity()
         val created = transferJpaRepository.save(entity)
@@ -20,25 +19,25 @@ class TransferPersistenceAdapter(
         return created.toTransfer()
     }
 
-    private fun Transfer.toTransferJpaEntity() = TransferJpaEntity(
-        id = this.id,
-        externalId = this.externalId.toString(),
-        payerExternalId = this.payerExternalId.toString(),
-        payeeExternalId = this.payeeExternalId.toString(),
-        value = this.value.toString(),
-        type = this.type,
-        createdAt = this.createdAt
-    )
+    private fun Transfer.toTransferJpaEntity() =
+        TransferJpaEntity(
+            id = this.id,
+            externalId = this.externalId.toString(),
+            payerExternalId = this.payerExternalId.toString(),
+            payeeExternalId = this.payeeExternalId.toString(),
+            value = this.value.toString(),
+            type = this.type,
+            createdAt = this.createdAt,
+        )
 
-
-    private fun TransferJpaEntity.toTransfer() = Transfer(
-        id = this.id,
-        externalId = UUID.fromString(this.externalId),
-        payerExternalId = UUID.fromString(this.payerExternalId),
-        payeeExternalId = UUID.fromString(this.payeeExternalId),
-        value = BigDecimal(this.value),
-        type = this.type,
-        createdAt = this.createdAt
-    )
-
+    private fun TransferJpaEntity.toTransfer() =
+        Transfer(
+            id = this.id,
+            externalId = UUID.fromString(this.externalId),
+            payerExternalId = UUID.fromString(this.payerExternalId),
+            payeeExternalId = UUID.fromString(this.payeeExternalId),
+            value = BigDecimal(this.value),
+            type = this.type,
+            createdAt = this.createdAt,
+        )
 }

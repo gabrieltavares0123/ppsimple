@@ -8,9 +8,7 @@ import org.testcontainers.kafka.ConfluentKafkaContainer
 
 @Testcontainers
 abstract class BaseIntegrationTest {
-
     companion object {
-
         @Container
         @ServiceConnection
         val postgres = PostgreSQLContainer("postgres:16")
@@ -18,7 +16,5 @@ abstract class BaseIntegrationTest {
         @Container
         @ServiceConnection
         val kafka = ConfluentKafkaContainer("confluentinc/cp-kafka:7.6.1")
-
     }
-
 }

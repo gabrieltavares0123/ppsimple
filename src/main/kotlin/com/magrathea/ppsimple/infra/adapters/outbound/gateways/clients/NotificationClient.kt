@@ -9,12 +9,10 @@ import org.springframework.web.bind.annotation.ResponseBody
 @FeignClient(
     name = "send-transfer-notification",
     url = "\${gateway.send-transfer-notification-gateway-url}",
-    configuration = [FeignClientConfiguration::class]
+    configuration = [FeignClientConfiguration::class],
 )
 interface NotificationClient {
-
     @PostMapping("/notify")
     @ResponseBody
     fun notify(): ResponseEntity<Unit>
-
 }

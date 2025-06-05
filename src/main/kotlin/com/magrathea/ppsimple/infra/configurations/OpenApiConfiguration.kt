@@ -10,7 +10,6 @@ import org.springframework.context.annotation.Configuration
 
 @Configuration
 class OpenApiConfiguration {
-
     @Bean
     fun provideOpenApi(): OpenAPI {
         val devServer = Server()
@@ -23,21 +22,21 @@ class OpenApiConfiguration {
 
         val mitLicense = License().name("MIT License").url("https://choosealicense.com/licenses/mit/")
 
-        val info = Info()
-            .title("Desafio PicPay")
-            .version("1.0")
-            .contact(contact)
-            .description("Essa API expõe endpoints para o desafio backend PicPay")
-            .license(mitLicense)
+        val info =
+            Info()
+                .title("Desafio PicPay")
+                .version("1.0")
+                .contact(contact)
+                .description("Essa API expõe endpoints para o desafio backend PicPay")
+                .license(mitLicense)
 
         return OpenAPI()
             .info(
-                info
+                info,
             ).servers(
                 listOf(
-                    devServer
-                )
+                    devServer,
+                ),
             )
     }
-
 }

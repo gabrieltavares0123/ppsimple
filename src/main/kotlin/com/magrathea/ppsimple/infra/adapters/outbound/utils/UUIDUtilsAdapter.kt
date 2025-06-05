@@ -6,9 +6,7 @@ import java.util.UUID
 
 @Component
 class UUIDUtilsAdapter : ExternalIdUtils {
-
     override fun random(): UUID = UUID.randomUUID()
 
     override fun fromString(str: String): UUID = UUID.fromString(str)
-
 }

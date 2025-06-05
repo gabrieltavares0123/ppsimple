@@ -7,11 +7,9 @@ import org.springframework.transaction.support.TransactionTemplate
 
 @Component
 class JpaTransactionAdapter(
-    private val transactionTemplate: TransactionTemplate
+    private val transactionTemplate: TransactionTemplate,
 ) : TransactionPersistence {
-
     private val logger = LoggerFactory.getLogger(JpaTransactionAdapter::class.java)
-
 
     override fun <T> open(block: () -> T): T? {
         return try {

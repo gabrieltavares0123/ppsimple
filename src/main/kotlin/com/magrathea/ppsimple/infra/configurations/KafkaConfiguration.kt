@@ -7,10 +7,8 @@ import org.springframework.kafka.config.TopicBuilder
 
 @Configuration
 class KafkaConfiguration {
-
     @Bean
     fun createTransactionNotificationTopic(): NewTopic {
-        return TopicBuilder.name("transaction-notification")
-            .build()
+        return TopicBuilder.name("transaction-notification").build()
     }
 }

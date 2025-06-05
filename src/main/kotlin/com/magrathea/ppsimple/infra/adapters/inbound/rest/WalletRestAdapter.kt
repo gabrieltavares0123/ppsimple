@@ -18,32 +18,28 @@ import org.springframework.web.bind.annotation.RestController
 class WalletRestAdapter(
     private val createWallet: CreateWalletService,
 ) {
-
     @PostMapping(
         "/wallet",
         consumes = [MediaType.APPLICATION_JSON_VALUE],
-        produces = [MediaType.APPLICATION_JSON_VALUE]
+        produces = [MediaType.APPLICATION_JSON_VALUE],
     )
     fun createWallet(
-        @RequestBody createWalletRequest: CreateWalletRequest
+        @RequestBody createWalletRequest: CreateWalletRequest,
     ): ResponseEntity<CreateWalletResponse> {
-
         val externalId = createWallet.execute(createWalletRequest.toCreateWalletUseCaseInput())
 
         return ResponseEntity.status(HttpStatus.CREATED).body(
-            CreateWalletResponse(
-                externalId = externalId
-            )
+            CreateWalletResponse(externalId = externalId),
         )
     }
 
-    private fun CreateWalletRequest.toCreateWalletUseCaseInput() = CreateWalletUseCase.Input(
-        externalId = null,
-        ownerName = this.ownerName,
-        document = Document.create(this.document),
-        balance = this.balance,
-        email = this.email,
-        password = this.password
-    )
-
+    private fun CreateWalletRequest.toCreateWalletUseCaseInput() =
+        CreateWalletUseCase.Input(
+            externalId = null,
+            ownerName = this.ownerName,
+            document = Document.create(this.document),
+            balance = this.balance,
+            email = this.email,
+            password = this.password,
+        )
 }

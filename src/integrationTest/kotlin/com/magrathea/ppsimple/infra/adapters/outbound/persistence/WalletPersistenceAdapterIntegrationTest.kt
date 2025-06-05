@@ -24,79 +24,74 @@ import kotlin.test.assertTrue
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-class WalletPersistenceAdapterIntegrationTest @Autowired constructor(
-    private val walletJpaRepository: WalletJpaRepository
-) : BaseIntegrationTest() {
+class WalletPersistenceAdapterIntegrationTest
+    @Autowired
+    constructor(
+        private val walletJpaRepository: WalletJpaRepository,
+    ) : BaseIntegrationTest() {
+        private val walletPersistence: WalletPersistence =
+            WalletPersistenceAdapter(walletJpaRepository = walletJpaRepository)
 
-    private val walletPersistence: WalletPersistence = WalletPersistenceAdapter(
-        walletJpaRepository = walletJpaRepository
-    )
+        @Test
+        fun `should save a new wallet`() {
+            val newWallet =
+                Wallet(
+                    id = null,
+                    externalId = UUID.fromString("d15fd044-fbbd-4fb4-b085-e7245cdac7c1"),
+                    ownerName = "Test owner",
+                    document = Document.create("000.000.000-00"),
+                    balance = BigDecimal(10000),
+                    email = "test@mail.com",
+                    password = "12345678",
+                )
 
-    @Test
-    fun `should save a new wallet`() {
-        val newWallet = Wallet(
-            id = null,
-            externalId = UUID.fromString("d15fd044-fbbd-4fb4-b085-e7245cdac7c1"),
-            ownerName = "Test owner",
-            document = Document.create("000.000.000-00"),
-            balance = BigDecimal(10000),
-            email = "test@mail.com",
-            password = "12345678"
-        )
+            val resultWallet = walletPersistence.save(wallet = newWallet)
 
-        val resultWallet = walletPersistence.save(
-            wallet = newWallet
-        )
+            assertNotNull(resultWallet)
+            assertInstanceOf<Wallet>(resultWallet)
+            assertNotNull(resultWallet.id)
+            assertEquals(actual = resultWallet.externalId, expected = newWallet.externalId)
+            assertEquals(actual = resultWallet.ownerName, expected = newWallet.ownerName)
+            assertEquals(actual = resultWallet.document.toString(), expected = newWallet.document.toString())
+            assertEquals(actual = resultWallet.balance, expected = newWallet.balance)
+            assertEquals(actual = resultWallet.email, expected = newWallet.email)
+            assertEquals(actual = resultWallet.password, expected = newWallet.password)
+        }
 
-        assertNotNull(resultWallet)
-        assertInstanceOf<Wallet>(resultWallet)
-        assertNotNull(resultWallet.id)
-        assertEquals(actual = resultWallet.externalId, expected = newWallet.externalId)
-        assertEquals(actual = resultWallet.ownerName, expected = newWallet.ownerName)
-        assertEquals(actual = resultWallet.document.toString(), expected = newWallet.document.toString())
-        assertEquals(actual = resultWallet.balance, expected = newWallet.balance)
-        assertEquals(actual = resultWallet.email, expected = newWallet.email)
-        assertEquals(actual = resultWallet.password, expected = newWallet.password)
+        @Test
+        @Sql(scripts = ["/sql/setup_wallet.sql"], executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+        @Sql(scripts = ["/sql/cleanup_wallet.sql"], executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+        fun `should find wallet by externalId when wallet exists in database`() {
+            val externalId = UUID.fromString("d15fd044-fbbd-4fb4-b085-e7245cdac7c1")
+            val resultWallet = walletPersistence.findBy(externalId)
+
+            assertNotNull(resultWallet)
+            assertInstanceOf<Wallet>(resultWallet)
+        }
+
+        @Test
+        fun `should not find wallet by externalId when wallet doesn't exists in database`() {
+            val externalId = UUID.fromString("d15fd044-fbbd-4fb4-b085-e7245cdac7c1")
+            val resultWallet = walletPersistence.findBy(externalId)
+
+            assertNull(resultWallet)
+        }
+
+        @Test
+        @Sql(scripts = ["/sql/setup_wallet.sql"], executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+        @Sql(scripts = ["/sql/cleanup_wallet.sql"], executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+        fun `should update wallet balance`() {
+            val externalID = UUID.fromString("d15fd044-fbbd-4fb4-b085-e7245cdac7c1")
+
+            val oldWallet = walletJpaRepository.findByExternalId(externalId = externalID.toString())
+            val newBalance = oldWallet!!.balance.plus(BigDecimal("100"))
+
+            walletPersistence.updateBalance(externalId = externalID, newBalance = newBalance)
+
+            val newWallet = walletJpaRepository.findByExternalId(externalId = externalID.toString())
+
+            assertTrue { oldWallet.balance.compareTo(BigDecimal("1000")) == 0 }
+            assertTrue { newWallet!!.balance.compareTo(BigDecimal("1100")) == 0 }
+            assertTrue { newWallet!!.balance > oldWallet.balance }
+        }
     }
-
-    @Test
-    @Sql(scripts = ["/sql/setup_wallet.sql"], executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-    @Sql(scripts = ["/sql/cleanup_wallet.sql"], executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
-    fun `should find wallet by externalId when wallet exists in database`() {
-        val externalId = UUID.fromString("d15fd044-fbbd-4fb4-b085-e7245cdac7c1")
-        val resultWallet = walletPersistence.findBy(externalId)
-
-        assertNotNull(resultWallet)
-        assertInstanceOf<Wallet>(resultWallet)
-    }
-
-
-    @Test
-    fun `should not find wallet by externalId when wallet doesn't exists in database`() {
-        val externalId = UUID.fromString("d15fd044-fbbd-4fb4-b085-e7245cdac7c1")
-        val resultWallet = walletPersistence.findBy(externalId)
-
-        assertNull(resultWallet)
-    }
-
-    @Test
-    @Sql(scripts = ["/sql/setup_wallet.sql"], executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-    @Sql(scripts = ["/sql/cleanup_wallet.sql"], executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
-    fun `should update wallet balance`() {
-        val externalID = UUID.fromString("d15fd044-fbbd-4fb4-b085-e7245cdac7c1")
-
-        val oldWallet = walletJpaRepository.findByExternalId(externalId = externalID.toString())
-        val newBalance = oldWallet!!.balance.plus(BigDecimal("100"))
-
-        walletPersistence.updateBalance(
-            externalId = externalID,
-            newBalance = newBalance
-        )
-
-        val newWallet = walletJpaRepository.findByExternalId(externalId = externalID.toString())
-
-        assertTrue { oldWallet.balance.compareTo(BigDecimal("1000")) == 0 }
-        assertTrue { newWallet!!.balance.compareTo(BigDecimal("1100")) == 0 }
-        assertTrue { newWallet!!.balance > oldWallet.balance }
-    }
-}

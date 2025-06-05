@@ -8,7 +8,6 @@ import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 
 class UUIDUtilsAdapterIntegrationTest {
-
     private val externalIdUtils: ExternalIdUtils = UUIDUtilsAdapter()
 
     @Test

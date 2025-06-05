@@ -18,16 +18,16 @@ import java.util.UUID
 import kotlin.test.assertEquals
 
 class CreateWalletServiceTest {
-
     private val transactionPersistence = mockk<TransactionPersistence>()
     private val walletPersistence = mockk<WalletPersistence>()
     private val externalIdUtils = mockk<ExternalIdUtils>()
 
-    private val createWalletService = CreateWalletService(
-        transactionPersistence = transactionPersistence,
-        walletPersistence = walletPersistence,
-        externalIdUtils = externalIdUtils
-    )
+    private val createWalletService =
+        CreateWalletService(
+            transactionPersistence = transactionPersistence,
+            walletPersistence = walletPersistence,
+            externalIdUtils = externalIdUtils,
+        )
 
     @Test
     fun `should save a new wallet with success`() {
@@ -35,31 +35,32 @@ class CreateWalletServiceTest {
         val document = Document.create("000.000.000-00")
         val balance = BigDecimal(2000)
 
-        val input = CreateWalletUseCase.Input(
-            // Overrides in service when it calls externalIdUtils.random().
-            externalId = null,
-            ownerName = "payer",
-            document = document,
-            balance = balance,
-            email = "payer@mail.com",
-            password = "12345678"
-        )
+        val input =
+            CreateWalletUseCase.Input(
+                // Overrides in service when it calls externalIdUtils.random().
+                externalId = null,
+                ownerName = "payer",
+                document = document,
+                balance = balance,
+                email = "payer@mail.com",
+                password = "12345678",
+            )
 
-        val wallet = Wallet(
-            id = null,
-            // Overrides in service when it calls externalIdUtils.random().
-            externalId = externalId,
-            ownerName = "payer",
-            document = document,
-            balance = balance,
-            email = "payer@mail.com",
-            password = "12345678"
-        )
+        val wallet =
+            Wallet(
+                id = null,
+                // Overrides in service when it calls externalIdUtils.random().
+                externalId = externalId,
+                ownerName = "payer",
+                document = document,
+                balance = balance,
+                email = "payer@mail.com",
+                password = "12345678",
+            )
 
         every { externalIdUtils.random() } returns externalId
         every { transactionPersistence.open<Wallet>(any()) } answers { firstArg<() -> Wallet>().invoke() }
         every { walletPersistence.save(wallet) } returns wallet
-
 
         val resultExternalId = createWalletService.execute(input)
 
@@ -78,23 +79,24 @@ class CreateWalletServiceTest {
         val document = Document.create("000.000.000-00")
         val balance = BigDecimal(2000)
 
-        val input = CreateWalletUseCase.Input(
-            // Overrides in service when it calls externalIdUtils.random().
-            externalId = null,
-            ownerName = "payer",
-            document = document,
-            balance = balance,
-            email = "payer@mail.com",
-            password = "12345678"
-        )
+        val input =
+            CreateWalletUseCase.Input(
+                // Overrides in service when it calls externalIdUtils.random().
+                externalId = null,
+                ownerName = "payer",
+                document = document,
+                balance = balance,
+                email = "payer@mail.com",
+                password = "12345678",
+            )
 
         every { externalIdUtils.random() } returns externalId
         every { transactionPersistence.open<Wallet>(any()) } returns null
 
-
-        val exception = assertThrows<TransactionDomainException> {
-            createWalletService.execute(input)
-        }
+        val exception =
+            assertThrows<TransactionDomainException> {
+                createWalletService.execute(input)
+            }
 
         verifyOrder {
             externalIdUtils.random()

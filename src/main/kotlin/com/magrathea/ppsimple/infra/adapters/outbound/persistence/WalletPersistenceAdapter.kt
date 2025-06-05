@@ -14,43 +14,41 @@ import java.util.UUID
 class WalletPersistenceAdapter(
     private val walletJpaRepository: WalletJpaRepository,
 ) : WalletPersistence {
-
-    override fun findBy(externalId: UUID): Wallet? =
-        walletJpaRepository.findByExternalId(externalId.toString())?.toWallet()
+    override fun findBy(externalId: UUID): Wallet? = walletJpaRepository.findByExternalId(externalId.toString())?.toWallet()
 
     override fun save(wallet: Wallet): Wallet {
         val userCredentialEntity = wallet.toWalletJpaEntity()
-
         val createdWallet = walletJpaRepository.save(userCredentialEntity)
-
         return createdWallet.toWallet()
     }
 
     @Transactional
-    override fun updateBalance(externalId: UUID, newBalance: BigDecimal) {
-        walletJpaRepository.updateBalance(
-            externalId = externalId.toString(),
-            newBalance = newBalance.toPlainString()
-        )
+    override fun updateBalance(
+        externalId: UUID,
+        newBalance: BigDecimal,
+    ) {
+        walletJpaRepository.updateBalance(externalId = externalId.toString(), newBalance = newBalance.toPlainString())
     }
 
-    private fun WalletJpaEntity.toWallet() = Wallet(
-        id = this.id,
-        externalId = UUID.fromString(this.externalId),
-        ownerName = this.ownerName,
-        document = Document.create(this.document),
-        balance = this.balance,
-        email = this.email,
-        password = this.password
-    )
+    private fun WalletJpaEntity.toWallet() =
+        Wallet(
+            id = this.id,
+            externalId = UUID.fromString(this.externalId),
+            ownerName = this.ownerName,
+            document = Document.create(this.document),
+            balance = this.balance,
+            email = this.email,
+            password = this.password,
+        )
 
-    private fun Wallet.toWalletJpaEntity() = WalletJpaEntity(
-        id = this.id,
-        externalId = this.externalId.toString(),
-        ownerName = this.ownerName,
-        document = this.document.unformatted(),
-        balance = this.balance,
-        email = this.email,
-        password = this.password
-    )
+    private fun Wallet.toWalletJpaEntity() =
+        WalletJpaEntity(
+            id = this.id,
+            externalId = this.externalId.toString(),
+            ownerName = this.ownerName,
+            document = this.document.unformatted(),
+            balance = this.balance,
+            email = this.email,
+            password = this.password,
+        )
 }

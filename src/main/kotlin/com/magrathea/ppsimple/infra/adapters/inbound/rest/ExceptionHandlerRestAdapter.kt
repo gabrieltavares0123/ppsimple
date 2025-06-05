@@ -18,15 +18,15 @@ import org.springframework.web.bind.annotation.RestControllerAdvice
 @Hidden
 @RestControllerAdvice
 class ExceptionHandlerRestAdapter {
-
     @ExceptionHandler(DomainException::class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     fun handleDomainException(de: DomainException): ResponseEntity<RestError> {
-        val restError = RestError(
-            status = HttpStatus.INTERNAL_SERVER_ERROR.name,
-            message = de.message,
-            details = de.details
-        )
+        val restError =
+            RestError(
+                status = HttpStatus.INTERNAL_SERVER_ERROR.name,
+                message = de.message,
+                details = de.details,
+            )
 
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(restError)
     }
@@ -34,11 +34,12 @@ class ExceptionHandlerRestAdapter {
     @ExceptionHandler(IllegalArgumentDomainException::class)
     @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
     fun handleIllegalArgumentDomainException(de: IllegalArgumentDomainException): ResponseEntity<RestError> {
-        val restError = RestError(
-            status = HttpStatus.UNPROCESSABLE_ENTITY.name,
-            message = de.message,
-            details = de.details
-        )
+        val restError =
+            RestError(
+                status = HttpStatus.UNPROCESSABLE_ENTITY.name,
+                message = de.message,
+                details = de.details,
+            )
 
         return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(restError)
     }
@@ -46,11 +47,12 @@ class ExceptionHandlerRestAdapter {
     @ExceptionHandler(InsufficientBalanceDomainException::class)
     @ResponseStatus(HttpStatus.FORBIDDEN)
     fun handleInsufficientBalanceDomainException(de: InsufficientBalanceDomainException): ResponseEntity<RestError> {
-        val restError = RestError(
-            status = HttpStatus.FORBIDDEN.name,
-            message = de.message,
-            details = de.details
-        )
+        val restError =
+            RestError(
+                status = HttpStatus.FORBIDDEN.name,
+                message = de.message,
+                details = de.details,
+            )
 
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(restError)
     }
@@ -58,11 +60,12 @@ class ExceptionHandlerRestAdapter {
     @ExceptionHandler(PayerEligibilityDomainException::class)
     @ResponseStatus(HttpStatus.FORBIDDEN)
     fun handlePayerEligibilityDomainException(de: PayerEligibilityDomainException): ResponseEntity<RestError> {
-        val restError = RestError(
-            status = HttpStatus.FORBIDDEN.name,
-            message = de.message,
-            details = de.details
-        )
+        val restError =
+            RestError(
+                status = HttpStatus.FORBIDDEN.name,
+                message = de.message,
+                details = de.details,
+            )
 
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(restError)
     }
@@ -70,11 +73,12 @@ class ExceptionHandlerRestAdapter {
     @ExceptionHandler(PayerNotFoundDomainException::class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     fun handlePayerNotFoundDomainException(de: PayerNotFoundDomainException): ResponseEntity<RestError> {
-        val restError = RestError(
-            status = HttpStatus.NOT_FOUND.name,
-            message = de.message,
-            details = de.details
-        )
+        val restError =
+            RestError(
+                status = HttpStatus.NOT_FOUND.name,
+                message = de.message,
+                details = de.details,
+            )
 
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(restError)
     }
@@ -82,11 +86,12 @@ class ExceptionHandlerRestAdapter {
     @ExceptionHandler(PayeeNotFoundDomainException::class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     fun handlePayeeNotFoundDomainException(de: PayeeNotFoundDomainException): ResponseEntity<RestError> {
-        val restError = RestError(
-            status = HttpStatus.NOT_FOUND.name,
-            message = de.message,
-            details = de.details
-        )
+        val restError =
+            RestError(
+                status = HttpStatus.NOT_FOUND.name,
+                message = de.message,
+                details = de.details,
+            )
 
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(restError)
     }
@@ -94,11 +99,12 @@ class ExceptionHandlerRestAdapter {
     @ExceptionHandler(TransactionDomainException::class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     fun handleTransactionDomainException(de: TransactionDomainException): ResponseEntity<RestError> {
-        val restError = RestError(
-            status = HttpStatus.INTERNAL_SERVER_ERROR.name,
-            message = de.message,
-            details = de.details
-        )
+        val restError =
+            RestError(
+                status = HttpStatus.INTERNAL_SERVER_ERROR.name,
+                message = de.message,
+                details = de.details,
+            )
 
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(restError)
     }
@@ -106,11 +112,12 @@ class ExceptionHandlerRestAdapter {
     @ExceptionHandler(UnauthorizedTransferDomainException::class)
     @ResponseStatus(HttpStatus.FORBIDDEN)
     fun handleUnauthorizedTransferDomainException(de: UnauthorizedTransferDomainException): ResponseEntity<RestError> {
-        val restError = RestError(
-            status = HttpStatus.FORBIDDEN.name,
-            message = de.message,
-            details = de.details
-        )
+        val restError =
+            RestError(
+                status = HttpStatus.FORBIDDEN.name,
+                message = de.message,
+                details = de.details,
+            )
 
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(restError)
     }
@@ -118,7 +125,6 @@ class ExceptionHandlerRestAdapter {
     data class RestError(
         val status: String,
         val message: String,
-        val details: Map<String, Any> = emptyMap()
+        val details: Map<String, Any> = emptyMap(),
     )
-
 }

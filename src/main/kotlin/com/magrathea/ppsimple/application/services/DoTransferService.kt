@@ -33,12 +33,12 @@ class DoTransferService(
     private val verifyAuthorizationGateway: VerifyAuthorizationGateway,
     private val sendNotificationGateway: SendNotificationGateway,
     private val notificationProducer: NotificationMessagingProducer,
-    private val externalIdUtils: ExternalIdUtils
+    private val externalIdUtils: ExternalIdUtils,
 ) : DoTransferUseCase {
-
     private val logger = LoggerFactory.getLogger(DoTransferService::class.java)
 
     override fun execute(input: DoTransferUseCase.Input): UUID {
+        logger.info("Starting executing new transfer")
 
         verifyAuthorization()
 
@@ -50,38 +50,48 @@ class DoTransferService(
 
         verifyPayerWalletBalance(payerWallet = payerWallet, transferValue = input.value)
 
-        val transfer = transactionPersistence.open {
-            logger.info("Updating payer balance.")
-            val payerNewBalance = payerWallet.balance - input.value
-            walletPersistence.updateBalance(
-                externalId = payerWallet.externalId,
-                newBalance = payerNewBalance
-            )
+        val transfer =
+            transactionPersistence.open {
+                logger.info("Updating payer balance.")
+                val payerNewBalance = payerWallet.balance - input.value
+                walletPersistence.updateBalance(externalId = payerWallet.externalId, newBalance = payerNewBalance)
 
-            logger.info("Updating payee balance.")
-            val payeeNewBalance: BigDecimal = payeeWallet.balance + input.value
-            walletPersistence.updateBalance(
-                externalId = payeeWallet.externalId,
-                newBalance = payeeNewBalance
-            )
+                logger.info("Updating payee balance.")
+                val payeeNewBalance: BigDecimal = payeeWallet.balance + input.value
+                walletPersistence.updateBalance(externalId = payeeWallet.externalId, newBalance = payeeNewBalance)
 
-            logger.info("Persisting transaction in database.")
-            val transferExternalId = externalIdUtils.random()
-            val newTransfer = Transfer(
-                id = null,
-                externalId = transferExternalId,
-                payerExternalId = payerWallet.externalId,
-                payeeExternalId = payeeWallet.externalId,
-                value = input.value,
-                type = if (payeeWallet.document.type == DocumentType.CPF) TransferType.NATURAL_TO_NATURAL else TransferType.NATURAL_TO_LEGAL,
-                createdAt = LocalDateTime.now(),
-            )
+                logger.info("Persisting transaction in database.")
+                val transferExternalId = externalIdUtils.random()
+                val newTransfer =
+                    Transfer(
+                        id = null,
+                        externalId = transferExternalId,
+                        payerExternalId = payerWallet.externalId,
+                        payeeExternalId = payeeWallet.externalId,
+                        value = input.value,
+                        type =
+                            if (payeeWallet.document.type == DocumentType.CPF) {
+                                TransferType.NATURAL_TO_NATURAL
+                            } else {
+                                TransferType.NATURAL_TO_LEGAL
+                            },
+                        createdAt = LocalDateTime.now(),
+                    )
 
-            transferPersistence.save(newTransfer)
+                transferPersistence.save(newTransfer)
+            }
+
+        if (transfer == null) {
+            val transactionDomainException =
+                TransactionDomainException("Something unexpected happened in the transaction.")
+            logger.error(
+                "Error while persisting new transfer in database message=${transactionDomainException.message}, " +
+                    "details=${transactionDomainException.details}",
+            )
+            throw transactionDomainException
+        } else {
+            logger.info("Finishing executing new transfer")
         }
-
-        if (transfer == null)
-            throw TransactionDomainException("Something unexpected happened in the transaction.")
 
         sendTransferNotification(transfer)
 
@@ -94,7 +104,7 @@ class DoTransferService(
         val authorization = verifyAuthorizationGateway.isAuthorized()
         if (authorization.not()) {
             throw UnauthorizedTransferDomainException(
-                message = "This transfer is unauthorized."
+                message = "This transfer is unauthorized.",
             ).also {
                 logger.error("Failed to verify if transfer is authorized with ${it.message}")
             }
@@ -104,12 +114,12 @@ class DoTransferService(
     }
 
     private fun findPayerWalletByExternalId(payerExternalId: UUID): Wallet {
-        logger.info("Started retrieving payer with externalId=${payerExternalId}.")
+        logger.info("Started retrieving payer with externalId=$payerExternalId.")
         val foundPayer = walletPersistence.findBy(payerExternalId)
         return if (foundPayer == null) {
             throw PayerNotFoundDomainException(
                 message = "Payer not found.",
-                payerExternalId = payerExternalId
+                payerExternalId = payerExternalId,
             ).also {
                 logger.error("Failed retrieving payer with message=${it.message}.")
             }
@@ -120,12 +130,12 @@ class DoTransferService(
     }
 
     private fun findPayeeWalletByExternalId(payeeExternalId: UUID): Wallet {
-        logger.info("Started retrieving payee with externalId=${payeeExternalId}.")
+        logger.info("Started retrieving payee with externalId=$payeeExternalId.")
         val foundPayee = walletPersistence.findBy(payeeExternalId)
         return if (foundPayee == null) {
             throw PayeeNotFoundDomainException(
                 message = "Payee not found.",
-                payeeExternalId = payeeExternalId
+                payeeExternalId = payeeExternalId,
             ).also {
                 logger.error("Failed retrieving payee with message=${it.message}.")
             }
@@ -139,20 +149,23 @@ class DoTransferService(
         if (payer.document.type != DocumentType.CPF) {
             throw PayerEligibilityDomainException(
                 message = "Invalid payer.",
-                reason = "Payer should not be legal for this kind of transaction."
+                reason = "Payer should not be legal for this kind of transaction.",
             ).also {
                 logger.error("Payer should not be Legal for kind of transaction. Message=${it.message}")
             }
         }
     }
 
-    private fun verifyPayerWalletBalance(payerWallet: Wallet, transferValue: BigDecimal) {
+    private fun verifyPayerWalletBalance(
+        payerWallet: Wallet,
+        transferValue: BigDecimal,
+    ) {
         logger.info("Started checking payer balance.")
         if (
             payerWallet.balance.compareTo(BigDecimal(0)) == 0 || (payerWallet.balance.compareTo(transferValue) < 0)
         ) {
             throw InsufficientBalanceDomainException(
-                message = "Insufficient balance."
+                message = "Insufficient balance.",
             ).also {
                 logger.error("Failed to check payer balance with message=${it.message}")
             }
@@ -161,24 +174,27 @@ class DoTransferService(
     }
 
     private fun sendTransferNotification(transfer: Transfer?) {
+        logger.info("Start sending transfer notification")
         if (transfer != null) {
             val notification = transfer.toNotification()
             val sendResult = sendNotificationGateway.send(notification)
 
             if (sendResult.not()) {
+                logger.info("Notification gateway is not available. Sending notification to resilience queue")
                 notificationProducer.produce(notification)
             }
         }
+        logger.info("Finish sending transfer notification")
     }
 
-    private fun Transfer.toNotification() = Notification(
-        id = this.id,
-        externalId = this.externalId,
-        payerExternalId = this.payerExternalId,
-        payeeExternalId = this.payeeExternalId,
-        value = this.value,
-        type = this.type,
-        createdAt = this.createdAt
-    )
-
+    private fun Transfer.toNotification() =
+        Notification(
+            id = this.id,
+            externalId = this.externalId,
+            payerExternalId = this.payerExternalId,
+            payeeExternalId = this.payeeExternalId,
+            value = this.value,
+            type = this.type,
+            createdAt = this.createdAt,
+        )
 }

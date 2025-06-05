@@ -8,7 +8,6 @@ import org.junit.jupiter.api.assertThrows
 import kotlin.test.assertEquals
 
 class DocumentTest {
-
     @Test
     fun `should create a CPF instance with success`() {
         assertDoesNotThrow {
@@ -25,9 +24,10 @@ class DocumentTest {
 
     @Test
     fun `should throw IllegalArgumentDomainException when document is empty`() {
-        val exception = assertThrows<IllegalArgumentDomainException> {
-            Document.create("")
-        }
+        val exception =
+            assertThrows<IllegalArgumentDomainException> {
+                Document.create("")
+            }
 
         assertInstanceOf<IllegalArgumentDomainException>(exception)
         assertEquals(actual = exception.message, expected = "Invalid document.")
@@ -40,31 +40,40 @@ class DocumentTest {
 
     @Test
     fun `should throw IllegalArgumentDomainException when document length is different from CPF length`() {
-        val exception = assertThrows<IllegalArgumentDomainException> {
-            Document.create("000.000.000-0")
-        }
+        val exception =
+            assertThrows<IllegalArgumentDomainException> {
+                Document.create("000.000.000-0")
+            }
 
         assertInstanceOf<IllegalArgumentDomainException>(exception)
         assertEquals(actual = exception.message, expected = "Invalid document.")
         with(exception.details) {
             assertEquals(actual = this["field"], expected = "document")
             assertEquals(actual = this["invalid_value"], expected = "000.000.000-0")
-            assertEquals(actual = this["expected_format"], expected = "Field should have length of 11 digits for CPF or 14 digits for CNPJ.")
+
+            assertEquals(
+                actual = this["expected_format"],
+                expected = "Field should have length of 11 digits for CPF or 14 digits for CNPJ.",
+            )
         }
     }
 
     @Test
     fun `should throw IllegalArgumentDomainException when document length is different from CNPJ length`() {
-        val exception = assertThrows<IllegalArgumentDomainException> {
-            Document.create("00.000.000/0000-0")
-        }
+        val exception =
+            assertThrows<IllegalArgumentDomainException> {
+                Document.create("00.000.000/0000-0")
+            }
 
         assertInstanceOf<IllegalArgumentDomainException>(exception)
         assertEquals(actual = exception.message, expected = "Invalid document.")
         with(exception.details) {
             assertEquals(actual = this["field"], expected = "document")
             assertEquals(actual = this["invalid_value"], expected = "00.000.000/0000-0")
-            assertEquals(actual = this["expected_format"], expected = "Field should have length of 11 digits for CPF or 14 digits for CNPJ.")
+            assertEquals(
+                actual = this["expected_format"],
+                expected = "Field should have length of 11 digits for CPF or 14 digits for CNPJ.",
+            )
         }
     }
 
@@ -121,5 +130,4 @@ class DocumentTest {
             assertEquals(actual = cnpj.toString(), expected = "00.000.000/0000-00")
         }
     }
-
 }

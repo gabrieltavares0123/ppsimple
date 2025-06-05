@@ -6,5 +6,5 @@ import java.util.UUID
 data class DoTransferRequest(
     val value: BigDecimal,
     val payer: UUID,
-    val payee: UUID
+    val payee: UUID,
 )
