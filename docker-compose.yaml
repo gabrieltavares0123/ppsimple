@@ -69,7 +69,7 @@ services:
     image: pp-simple-app:1.0
     build:
       context: .
-      dockerfile: ./DockerFile
+      dockerfile: ./Dockerfile
     depends_on:
       postgres:
         condition: service_healthy
