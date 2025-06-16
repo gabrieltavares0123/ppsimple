@@ -3,8 +3,8 @@ package com.magrathea.ppsimple.infra.adapters.outbound.gateways
 import com.magrathea.ppsimple.application.ports.outbound.SendNotificationGateway
 import com.magrathea.ppsimple.domain.Notification
 import com.magrathea.ppsimple.infra.adapters.outbound.gateways.clients.NotificationClient
-import feign.FeignException
 import org.slf4j.LoggerFactory
+import org.springframework.cloud.client.circuitbreaker.NoFallbackAvailableException
 import org.springframework.stereotype.Component
 
 @Component
@@ -22,10 +22,8 @@ class SendNotificationGatewayAdapter(
                 "Finish request to send notification with success code ${result.statusCode} and body ${result.body}.",
             )
             true
-        } catch (fe: FeignException) {
-            logger.info(
-                "Failed request to send notification with error code ${fe.status()} and body ${fe.responseBody()}.",
-            )
+        } catch (fe: NoFallbackAvailableException) {
+            logger.info("Failed request to send notification.")
             false
         }
     }

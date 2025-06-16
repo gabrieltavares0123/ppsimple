@@ -98,6 +98,8 @@ services:
       SPRING_FLYWAY_BASELINE-ON-MIGRATE: true
       SPRING_FLYWAY_BASELINE-VERSION: 0
       SPRING_KAFKA_CONSUMER_PROPERTIES_SPRING_JSON_TRUSTED_PACKAGES: '*'
+      NOTIFICATION_TOPIC: transaction-notification
+      DLT_NOTIFICATION_TOPIC: transaction-notification-dlt
     volumes:
       - logs:/app/log
     healthcheck:
